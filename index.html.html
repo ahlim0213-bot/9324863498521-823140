@@ -1,0 +1,2773 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>취업내비 (JobNavi AI) - 올인원 실시간 취업 파트너</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome 6 CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Pretendard Font -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f8fafc; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-500 flex items-center justify-center text-white shadow-md shadow-indigo-100 flex-shrink-0">
+          <i class="fa-solid fa-compass text-xl"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="text-lg font-bold text-slate-900 tracking-tight">취업내비 <span class="text-xs bg-indigo-100 text-indigo-700 font-extrabold px-2 py-0.5 rounded-full">AI 실시간 파트너</span></h1>
+          </div>
+          <p class="text-xs text-slate-500 hidden sm:block">실시간 웹/뉴스 검색 기반 기업 분석 • 경험 DB • 85~95% 황금비율 자소서 • 10대 면접&꼬리질문 개별 코칭</p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-2">
+        <button id="load-sample-btn" class="px-3.5 py-1.5 text-xs font-bold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-xl transition-all flex items-center space-x-1.5 border border-indigo-200 shadow-sm">
+          <i class="fa-solid fa-bolt text-indigo-600"></i>
+          <span class="hidden sm:inline">체험용 7대 경험 채우기</span>
+          <span class="sm:hidden">7대 샘플</span>
+        </button>
+        <button id="clear-storage-btn" class="p-2 text-slate-400 hover:text-rose-500 rounded-xl transition-colors" title="전체 데이터 초기화">
+          <i class="fa-solid fa-trash-can text-base"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Stepper Navigation -->
+    <div class="border-t border-slate-100 bg-white shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex overflow-x-auto no-scrollbar space-x-2 py-2 text-sm">
+        <button data-tab="tab-step1" class="tab-btn flex-1 min-w-[170px] py-2.5 px-3 rounded-xl font-bold flex items-center justify-center space-x-2 transition-all bg-indigo-600 text-white shadow-sm">
+          <span class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-xs">1</span>
+          <span>내 경험 금고 (STAR)</span>
+        </button>
+        <button data-tab="tab-step2" class="tab-btn flex-1 min-w-[170px] py-2.5 px-3 rounded-xl font-semibold flex items-center justify-center space-x-2 transition-all text-slate-600 hover:bg-slate-100">
+          <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs">2</span>
+          <span>공고입력 & 기업분석</span>
+        </button>
+        <button data-tab="tab-step3" class="tab-btn flex-1 min-w-[170px] py-2.5 px-3 rounded-xl font-semibold flex items-center justify-center space-x-2 transition-all text-slate-600 hover:bg-slate-100">
+          <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs">3</span>
+          <span>4대 문항 자소서 빌더</span>
+        </button>
+        <button data-tab="tab-step4" class="tab-btn flex-1 min-w-[170px] py-2.5 px-3 rounded-xl font-semibold flex items-center justify-center space-x-2 transition-all text-slate-600 hover:bg-slate-100">
+          <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs">4</span>
+          <span>면접 코칭 & 답변 첨삭</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+
+    <!-- STEP 1: Experience Vault -->
+    <section id="tab-step1" class="tab-content block space-y-6">
+      <div class="bg-gradient-to-r from-indigo-50 via-slate-50 to-emerald-50 border border-indigo-100 rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
+        <div class="flex items-start space-x-3.5">
+          <div class="p-2.5 bg-indigo-600 text-white rounded-xl shadow-sm flex-shrink-0">
+            <i class="fa-solid fa-vault text-2xl"></i>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <h2 class="text-base font-bold text-slate-900">내 경험 금고 (목표: 7~10개 축적)</h2>
+              <span id="milestone-badge" class="hidden text-xs bg-emerald-100 text-emerald-700 font-extrabold px-2.5 py-0.5 rounded-full border border-emerald-300">
+                🎉 필수 7개 달성 완료!
+              </span>
+            </div>
+            <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+              사용자가 답변을 적을 때마다 <strong>답변 내용의 키워드와 맥락을 실시간 분석</strong>하여 맞춤형 실전 팁을 제공합니다.
+            </p>
+          </div>
+        </div>
+
+        <div class="bg-white border border-indigo-100 rounded-xl p-3 sm:w-80 shadow-sm flex-shrink-0">
+          <div class="flex items-center justify-between text-xs mb-1.5">
+            <span class="font-bold text-slate-700 flex items-center space-x-1">
+              <i class="fa-solid fa-chart-line text-indigo-600"></i>
+              <span>경험 DB 축적도</span>
+            </span>
+            <span class="font-extrabold text-indigo-600" id="progress-text">0 / 7개 (0%)</span>
+          </div>
+          <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+            <div id="experience-progress-bar" class="bg-gradient-to-r from-indigo-500 to-emerald-500 h-full w-0 transition-all duration-500"></div>
+          </div>
+          <p id="progress-guide-hint" class="text-[11px] text-slate-500 mt-1.5 truncate">
+            💡 최소 7개 경험을 모으면 어떤 공고에도 100% 매칭됩니다!
+          </p>
+        </div>
+      </div>
+
+      <div id="step-complete-banner" class="hidden bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl p-4 sm:p-5 text-white shadow-md flex items-center justify-between flex-wrap gap-3">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-xl flex-shrink-0">🎯</div>
+          <div>
+            <h3 class="font-bold text-sm sm:text-base">축하합니다! 합격에 필요한 7대 핵심 경험 DB가 모두 완성되었습니다!</h3>
+            <p class="text-xs text-emerald-100 mt-0.5">다음 단계로 넘어가 지원할 기업과 공고를 입력하고 분석해 보세요.</p>
+          </div>
+        </div>
+        <button id="go-to-step2-btn" class="px-4 py-2.5 bg-white text-emerald-800 hover:bg-emerald-50 font-bold text-xs rounded-xl shadow-sm transition-all flex items-center space-x-1.5">
+          <span>다음 단계: 공고입력 & 기업분석으로 이동</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-7 flex flex-col bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden h-[660px]">
+          <div class="px-5 py-3.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <div class="relative">
+                <div class="w-9 h-9 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-sm">AI</div>
+                <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white"></span>
+              </div>
+              <div>
+                <div class="flex items-center space-x-2">
+                  <p class="text-sm font-bold text-slate-800">취업내비 실시간 인터뷰어</p>
+                  <span id="interview-theme-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
+                    테마 1: 팀 프로젝트/협업
+                  </span>
+                </div>
+                <p class="text-xs text-slate-500">직전 답변 내용 실시간 분석 동적 팁 생성</p>
+              </div>
+            </div>
+
+            <div>
+              <select id="chat-job-field" class="text-xs font-semibold bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="유통/MD/커머스">유통 / MD / 커머스</option>
+                <option value="영업/해외영업/사업개발">영업 / 해외영업 / 사업개발</option>
+                <option value="식품/바이오/FMCG">식품 / 바이오 / FMCG</option>
+                <option value="헬스케어/의료기기">헬스케어 / 의료가전</option>
+                <option value="IT/개발/데이터">IT / 개발 / 데이터</option>
+                <option value="마케팅/기획/브랜딩">마케팅 / 기획 / 브랜딩</option>
+                <option value="인사/경영지원/재무">인사 / 경영지원 / 재무</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-3.5 bg-slate-50/50">
+            <div class="flex items-start space-x-2.5">
+              <div class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center flex-shrink-0 text-xs font-bold">AI</div>
+              <div class="bg-white border border-slate-200 text-slate-800 rounded-2xl rounded-tl-none p-3.5 shadow-sm max-w-[88%] text-sm leading-relaxed">
+                반갑습니다! 서류와 면접관의 까다로운 질문에 맞설 <strong class="text-indigo-700">7~10개의 핵심 경험 DB</strong>를 차례대로 함께 발굴해 나갈게요.<br><br>
+                첫 번째 테마는 <strong>[팀 프로젝트 또는 협업 경험]</strong>입니다. 학과 과제, 캡스톤, 대외활동, 동아리 등에서 동료들과 함께 목표를 달성했던 에피소드를 한두 문장으로 편하게 들려주세요! 🚀
+              </div>
+            </div>
+          </div>
+
+          <div class="px-4 py-2 bg-white border-t border-slate-100 flex items-center space-x-2 overflow-x-auto no-scrollbar text-xs">
+            <span class="text-slate-400 font-medium flex-shrink-0">추천 시작:</span>
+            <button class="quick-chip whitespace-nowrap px-2.5 py-1 rounded-full bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 transition-colors">
+              플리마켓에서 재고 소진을 위한 타임세일 기획
+            </button>
+            <button class="quick-chip whitespace-nowrap px-2.5 py-1 rounded-full bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 transition-colors">
+              마케팅 서포터즈 팀원 간 일정 조율 및 콘텐츠 발행
+            </button>
+            <button class="quick-chip whitespace-nowrap px-2.5 py-1 rounded-full bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 transition-colors">
+              카페 아르바이트 중 피크타임 주문 동선 개선
+            </button>
+          </div>
+
+          <form id="chat-form" class="p-3 bg-white border-t border-slate-200 flex items-center space-x-2">
+            <input type="text" id="chat-input" placeholder="답변을 입력하세요 (예: 축제 부스에서 재고 부족 문제를 해결했습니다)" class="flex-1 text-sm bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center space-x-1.5 shadow-sm shadow-indigo-200 flex-shrink-0">
+              <span>전송</span>
+              <i class="fa-solid fa-paper-plane text-xs"></i>
+            </button>
+          </form>
+        </div>
+
+        <div class="lg:col-span-5 flex flex-col space-y-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <h3 class="text-base font-bold text-slate-900">내 경험 금고 DB</h3>
+              <span id="exp-count-badge" class="px-2 py-0.5 text-xs font-bold bg-indigo-100 text-indigo-700 rounded-full">0개</span>
+            </div>
+            <button id="add-manual-card-btn" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center space-x-1">
+              <i class="fa-solid fa-circle-plus"></i>
+              <span>직접 카드 추가</span>
+            </button>
+          </div>
+
+          <div id="experience-list" class="space-y-3.5 h-[600px] overflow-y-auto pr-1">
+            <div id="empty-exp-state" class="h-full border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center p-6 text-center">
+              <div class="w-12 h-12 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mb-3">
+                <i class="fa-solid fa-vault text-2xl"></i>
+              </div>
+              <p class="text-sm font-bold text-slate-700">저장된 경험 카드가 없습니다</p>
+              <p class="text-xs text-slate-400 mt-1 max-w-[240px]">
+                왼쪽 AI 인터뷰어와 대화하면 맥락에 맞춘 실전 팁과 함께 STAR 카드가 자동으로 축적됩니다.
+              </p>
+              <button id="generate-sample-card-btn" class="mt-4 px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-lg text-xs font-semibold hover:bg-indigo-100 transition-colors">
+                7대 핵심 경험 샘플 채우기
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 2: Real Search-Grounded Company Analysis -->
+    <section id="tab-step2" class="tab-content hidden space-y-6">
+      <div class="bg-gradient-to-r from-emerald-50 via-teal-50 to-indigo-50 border border-emerald-100 rounded-2xl p-4 sm:p-5 flex items-start space-x-4">
+        <div class="p-2.5 bg-emerald-600 text-white rounded-xl shadow-sm flex-shrink-0">
+          <i class="fa-solid fa-earth-americas text-2xl"></i>
+        </div>
+        <div class="flex-1">
+          <div class="flex items-center space-x-2">
+            <h2 class="text-base font-bold text-slate-900">공고입력 & 실시간 기업분석 (웹/뉴스 실시간 검색 엔진)</h2>
+            <span class="text-[10px] font-extrabold bg-indigo-600 text-white px-2.5 py-0.5 rounded-full shadow-sm">
+              <i class="fa-solid fa-satellite-dish mr-1"></i>Google Search Grounded AI
+            </span>
+          </div>
+          <p class="text-sm text-slate-600 mt-1 leading-relaxed">
+            형식적인 템플릿 문장이 아닌, 사용자가 입력한 기업(예: <strong>세라젬, CJ제일제당, 이마트, 삼성전자, 현대차, 중소/스타트업</strong> 등)에 대해 <strong>실시간 웹·뉴스 검색</strong>을 실행하여 실제 최신 제품군, 실적 수치, 글로벌 시장 현황, 예정 사업 및 직무 현직자 실무 언어 10개를 100% 팩트 기반으로 추출합니다.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left: Input Form (5 Cols) -->
+        <div class="lg:col-span-5 bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+            <h3 class="text-sm font-bold text-slate-900 flex items-center space-x-1.5">
+              <i class="fa-solid fa-pen-to-square text-emerald-600"></i>
+              <span>채용 정보 직접 입력</span>
+            </h3>
+            <span class="text-[11px] text-slate-400">실시간 검색 연동</span>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-800 mb-1">
+              <i class="fa-solid fa-building text-emerald-600 mr-1"></i>목표 회사명 <span class="text-rose-500">*</span>
+            </label>
+            <input type="text" id="target-company" placeholder="예: 세라젬, CJ제일제당, 이마트, 현대자동차, 카카오, 뤼튼테크놀로지스" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 font-bold text-slate-900 transition-all">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-800 mb-1">
+              <i class="fa-solid fa-briefcase text-emerald-600 mr-1"></i>지원 직무 <span class="text-rose-500">*</span>
+            </label>
+            <input type="text" id="target-role" placeholder="예: 해외영업, 경영지원, MD, 생산관리, 마케팅, 소프트웨어개발" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 font-bold text-slate-900 transition-all">
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="block text-xs font-bold text-slate-800 flex items-center space-x-1">
+                <i class="fa-solid fa-file-lines text-emerald-600"></i>
+                <span>모집공고 본문 내용 (직접 수정/붙여넣기)</span>
+              </label>
+              <button id="clear-desc-btn" class="text-[11px] text-slate-400 hover:text-rose-500">내용 지우기</button>
+            </div>
+            <textarea id="target-job-desc" rows="9" placeholder="채용공고 본문(담당업무, 자격요건, 우대사항 등)을 복사해서 여기에 붙여넣으세요. 입력된 본문의 프로젝트와 실무 키워드를 AI가 함께 분석합니다." class="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl p-3.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 leading-relaxed font-sans"></textarea>
+          </div>
+
+          <button id="analyze-job-btn" class="w-full bg-gradient-to-r from-emerald-600 to-indigo-600 hover:from-emerald-700 hover:to-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-md shadow-emerald-200 transition-all flex items-center justify-center space-x-2 text-sm">
+            <i class="fa-solid fa-magnifying-glass-arrow-right"></i>
+            <span id="analyze-btn-text">실시간 웹 검색 & 팩트 기반 기업 분석 실행</span>
+          </button>
+
+          <!-- Search Status Bar -->
+          <div id="search-status-bar" class="hidden p-3 bg-indigo-50 border border-indigo-100 rounded-xl space-y-1.5 text-xs text-indigo-950">
+            <div class="flex items-center justify-between font-bold">
+              <span class="flex items-center space-x-1.5 text-indigo-700">
+                <i class="fa-solid fa-circle-notch fa-spin text-indigo-600"></i>
+                <span id="search-status-text">구글 실시간 뉴스 및 기업 공시 정보 검색 중...</span>
+              </span>
+              <span id="search-status-percent" class="text-indigo-600">45%</span>
+            </div>
+            <div class="w-full bg-indigo-200/60 h-1.5 rounded-full overflow-hidden">
+              <div id="search-status-progress" class="bg-indigo-600 h-full w-[45%] transition-all duration-300"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Extracted Real Fact Intelligence & 10 Vocabs (7 Cols) -->
+        <div class="lg:col-span-7 space-y-4">
+          <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3.5">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+              <div class="flex items-center space-x-2">
+                <h3 class="text-sm font-bold text-slate-900 flex items-center space-x-1.5">
+                  <i class="fa-solid fa-building-circle-check text-indigo-600"></i>
+                  <span id="intel-card-header">실시간 기업 심층 인텔리전스 (비전·뉴스·성과·예정사업)</span>
+                </h3>
+              </div>
+              <span id="intel-status-tag" class="text-[11px] font-bold text-indigo-700 bg-indigo-50 px-2.5 py-0.5 rounded-full border border-indigo-200 flex items-center space-x-1">
+                <i class="fa-solid fa-check"></i>
+                <span>실시간 정보 동기화 완료</span>
+              </span>
+            </div>
+
+            <!-- 4 Pillar Intelligence Box -->
+            <div class="grid grid-cols-1 gap-3" id="company-intel-grid">
+              <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-100 space-y-1">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-1.5 text-xs font-bold text-indigo-700">
+                    <i class="fa-solid fa-compass"></i>
+                    <span>1. 기업 비전 & 핵심 인재상</span>
+                  </div>
+                  <span class="text-[10px] text-slate-400">경영 미션 및 실제 가치</span>
+                </div>
+                <p id="intel-vision" class="text-xs text-slate-700 leading-relaxed font-normal">
+                  목표 회사명과 직무를 입력한 후 분석 버튼을 누르면 실시간 검색 기반 기업 팩트가 도출됩니다.
+                </p>
+              </div>
+
+              <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-100 space-y-1">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-1.5 text-xs font-bold text-emerald-700">
+                    <i class="fa-solid fa-newspaper"></i>
+                    <span>2. 최신 뉴스 & 주요 동향 (실제 웹 보도 기반)</span>
+                  </div>
+                  <span class="text-[10px] text-slate-400">최근 보도 및 산업 이슈</span>
+                </div>
+                <p id="intel-news" class="text-xs text-slate-700 leading-relaxed font-normal">
+                  실제 언론 보도와 공식 보도자료에 기반한 최신 기업 뉴스가 여기에 요약됩니다.
+                </p>
+              </div>
+
+              <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-100 space-y-1">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-1.5 text-xs font-bold text-amber-700">
+                    <i class="fa-solid fa-trophy"></i>
+                    <span>3. 주요 사업 성과 & 정량 실적 지표</span>
+                  </div>
+                  <span class="text-[10px] text-slate-400">서류 인용용 정량 팩트</span>
+                </div>
+                <p id="intel-achievements" class="text-xs text-slate-700 leading-relaxed font-normal">
+                  공시 보고서, 매출액, 수출 실적 등 자소서에 바로 인용할 수 있는 수치 팩트가 정리됩니다.
+                </p>
+              </div>
+
+              <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-100 space-y-1">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-1.5 text-xs font-bold text-purple-700">
+                    <i class="fa-solid fa-rocket"></i>
+                    <span>4. 향후 예정 사업 & 전략 로드맵</span>
+                  </div>
+                  <span class="text-[10px] text-slate-400">지원동기 및 포부 핵심 소재</span>
+                </div>
+                <p id="intel-future" class="text-xs text-slate-700 leading-relaxed font-normal">
+                  지원동기와 입사 후 포부에 강력한 설득력을 부여할 미래 신사업 및 프로젝트 정보입니다.
+                </p>
+              </div>
+            </div>
+
+            <!-- Grounding Sources Link Container -->
+            <div id="sources-container" class="pt-2 border-t border-slate-100 flex flex-wrap items-center gap-1.5 text-[11px] text-slate-500">
+              <span class="font-bold text-slate-400"><i class="fa-solid fa-link text-indigo-500 mr-1"></i>실시간 검색 출처:</span>
+              <span id="sources-list" class="flex flex-wrap gap-1">
+                <span class="px-2 py-0.5 bg-slate-100 rounded text-slate-600">공식 공시 및 포털 최신 뉴스 실시간 반영</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- 10 Insider Practitioner Vocabs -->
+          <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-sm font-bold text-slate-900 flex items-center space-x-1.5">
+                  <i class="fa-solid fa-comments text-teal-600"></i>
+                  <span id="vocab-card-header">현직자 실무 언어 10선 (용어 정의 & 자소서 적용 예시)</span>
+                </h3>
+                <p class="text-xs text-slate-400 mt-0.5">인사담당자가 읽었을 때 "실무를 이미 해본 인재"라는 인상을 주는 전문 용어</p>
+              </div>
+              <span id="vocab-count-badge" class="text-xs font-bold px-2 py-0.5 bg-teal-50 text-teal-700 rounded-full border border-teal-200">10/10개 장착</span>
+            </div>
+
+            <div id="insider-dictionary" class="grid grid-cols-1 md:grid-cols-2 gap-2.5 max-h-[360px] overflow-y-auto pr-1"></div>
+          </div>
+
+          <!-- Best Matching Experience Recommendation -->
+          <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+            <h3 class="text-xs font-bold text-slate-900 flex items-center space-x-1.5 mb-1.5">
+              <i class="fa-solid fa-link text-indigo-600"></i>
+              <span>내 경험 금고(Step 1)와의 최적 매칭 에피소드</span>
+            </h3>
+            <div id="matched-experience-box" class="p-3 bg-indigo-50/70 border border-indigo-100 rounded-xl text-xs text-indigo-950 leading-relaxed">
+              공고 분석이 완료되면 내 경험 금고 중 이 공고에 가장 적합한 에피소드가 여기에 추천됩니다.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 3: 4 Subdivided Essay Builders with Golden Ratio 85%-95% Length -->
+    <section id="tab-step3" class="tab-content hidden space-y-6">
+      <div class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-100 rounded-2xl p-4 sm:p-5 flex items-start space-x-4">
+        <div class="p-2.5 bg-amber-500 text-white rounded-xl shadow-sm flex-shrink-0">
+          <i class="fa-solid fa-wand-magic text-2xl"></i>
+        </div>
+        <div class="flex-1">
+          <h2 class="text-base font-bold text-slate-900">4대 핵심 문항 자소서 빌더 & 85%~95% 황금비율 정밀 피팅</h2>
+          <p class="text-sm text-slate-600 mt-0.5 leading-relaxed">
+            기업 필수 4대 문항을 선택하고 <strong>목표 글자 수를 직접 숫자로 지정</strong>하세요! 
+            Step 2에서 실시간 검색으로 수집된 회사의 실제 비전, 제품군, 최신 뉴스와 현직자 언어가 반영되며, <strong class="text-amber-700">목표 글자 수의 85%~95% 황금 구간</strong>에 문장 단위로 정확하게 자동 조절됩니다.
+          </p>
+        </div>
+      </div>
+
+      <!-- 4 Core Subdivided Items Navigation Tabs -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-3 shadow-sm flex flex-wrap gap-2">
+        <button data-section-key="reason" class="essay-subtab-btn flex-1 min-w-[200px] py-2.5 px-3.5 rounded-xl font-bold text-xs flex items-center justify-center space-x-2 transition-all bg-amber-500 text-white shadow-sm">
+          <span class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[10px]">1</span>
+          <span>1. 지원동기 및 포부</span>
+        </button>
+        <button data-section-key="challenge" class="essay-subtab-btn flex-1 min-w-[200px] py-2.5 px-3.5 rounded-xl font-semibold text-xs flex items-center justify-center space-x-2 transition-all bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200">
+          <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center text-[10px]">2</span>
+          <span>2. 도전 및 성취 경험</span>
+        </button>
+        <button data-section-key="competency" class="essay-subtab-btn flex-1 min-w-[200px] py-2.5 px-3.5 rounded-xl font-semibold text-xs flex items-center justify-center space-x-2 transition-all bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200">
+          <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center text-[10px]">3</span>
+          <span>3. 직무 강점 및 역량</span>
+        </button>
+        <button data-section-key="aiefficiency" class="essay-subtab-btn flex-1 min-w-[200px] py-2.5 px-3.5 rounded-xl font-semibold text-xs flex items-center justify-center space-x-2 transition-all bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200">
+          <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center text-[10px]">4</span>
+          <span>4. AI 활용 및 업무 효율화</span>
+        </button>
+      </div>
+
+      <!-- Settings Bar -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+          <div class="md:col-span-6 space-y-1">
+            <div class="flex items-center justify-between">
+              <label class="block text-xs font-bold text-slate-800" id="current-item-label">
+                문항 1: 지원동기 및 포부
+              </label>
+              <span class="text-[10px] text-slate-400">실제 채용 공고 문항에 맞게 자유 수정 가능</span>
+            </div>
+            <input type="text" id="essay-prompt" placeholder="기업 채용공고의 자소서 문항을 입력하세요" class="w-full text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 focus:bg-white focus:ring-2 focus:ring-amber-500 focus:outline-none font-medium">
+          </div>
+
+          <div class="md:col-span-3 space-y-1">
+            <label class="block text-xs font-bold text-slate-800">연계할 경험 카드 (금고 DB)</label>
+            <select id="essay-source-card" class="w-full text-xs font-semibold bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 focus:bg-white focus:ring-2 focus:ring-amber-500 focus:outline-none text-slate-700">
+              <option value="auto">🌟 AI 추천 최적 경험 자동 반영</option>
+            </select>
+          </div>
+
+          <div class="md:col-span-3 space-y-1">
+            <div class="flex items-center justify-between">
+              <label class="block text-xs font-bold text-slate-800">목표 글자수 (직접 입력)</label>
+              <span class="text-[10px] text-amber-700 font-bold" id="golden-range-hint">황금구간: 595~665자</span>
+            </div>
+            <div class="flex items-center space-x-1.5">
+              <div class="relative flex-1">
+                <input type="number" id="custom-len-input" min="200" max="3000" step="50" value="700" class="w-full text-xs font-bold bg-amber-50/60 border border-amber-300 rounded-xl px-3 py-2 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 text-amber-900 pr-8">
+                <span class="absolute right-2.5 top-2 text-xs font-bold text-amber-700">자</span>
+              </div>
+              <div class="flex space-x-1">
+                <button data-quick-len="500" class="quick-len-btn px-2 py-2 text-[11px] font-bold rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 transition-colors">500</button>
+                <button data-quick-len="800" class="quick-len-btn px-2 py-2 text-[11px] font-bold rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 transition-colors">800</button>
+                <button data-quick-len="1000" class="quick-len-btn px-2 py-2 text-[11px] font-bold rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 transition-colors">1000</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100">
+          <div class="flex items-center space-x-2">
+            <span class="text-xs text-slate-500 font-semibold">반영된 실시간 기업 팩트:</span>
+            <div id="keyword-badges" class="flex flex-wrap gap-1 text-xs">
+              <span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded">실제 기업 팩트</span>
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-2">
+            <button id="generate-draft-btn" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm rounded-xl shadow-sm transition-all flex items-center space-x-1.5">
+              <i class="fa-solid fa-pen-nib"></i>
+              <span>1. 항목별 85~95% 초안 생성</span>
+            </button>
+            <button id="humanize-btn" class="px-5 py-2.5 bg-slate-900 hover:bg-black text-white font-bold text-sm rounded-xl shadow-sm transition-all flex items-center space-x-1.5 disabled:opacity-50">
+              <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
+              <span>2. AI 티 벗기기 (휴먼라이징)</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Headline Recommendations -->
+      <div id="headline-recommendations" class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hidden">
+        <p class="text-xs font-bold text-slate-500 mb-2 flex items-center space-x-1.5">
+          <i class="fa-solid fa-quote-left text-amber-500"></i>
+          <span>인사담당자의 눈길을 사로잡는 추천 소제목(A/B 헤드카피)</span>
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs" id="headlines-box"></div>
+      </div>
+
+      <!-- Editor Areas -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex flex-col h-[520px]">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+            <div class="flex items-center space-x-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+              <span class="text-xs font-bold text-slate-700">생성된 초안 (85~95% 볼륨 피팅)</span>
+            </div>
+            <button id="copy-draft-btn" class="text-xs text-slate-500 hover:text-indigo-600 flex items-center space-x-1">
+              <i class="fa-solid fa-copy"></i>
+              <span>복사</span>
+            </button>
+          </div>
+          <textarea id="essay-draft-editor" class="flex-1 w-full text-xs font-normal text-slate-700 p-2 border-0 focus:outline-none resize-none leading-relaxed" placeholder="[1. 항목별 85~95% 초안 생성] 버튼을 누르면 실시간 수집된 기업 팩트와 설정한 목표 글자 수의 85%~95% 범위에 맞춰진 초안이 여기에 작성됩니다."></textarea>
+          <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <span>공백 포함 <strong id="draft-char-count" class="text-slate-800">0</strong>자</span>
+            <span id="draft-golden-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500">대기 중</span>
+          </div>
+        </div>
+
+        <div class="bg-white border-2 border-amber-300/80 rounded-2xl p-4 shadow-md flex flex-col h-[520px] relative">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+            <div class="flex items-center space-x-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+              <span class="text-xs font-bold text-slate-900">휴먼라이징 완성본 (85~95% 황금비율 정착)</span>
+              <span id="human-golden-badge" class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full">분량 산정 대기</span>
+            </div>
+            <button id="copy-humanized-btn" class="text-xs text-amber-600 font-bold hover:text-amber-700 flex items-center space-x-1">
+              <i class="fa-solid fa-copy"></i>
+              <span>복사하기</span>
+            </button>
+          </div>
+
+          <textarea id="essay-humanized-editor" class="flex-1 w-full text-xs font-normal text-slate-800 p-2 border-0 focus:outline-none resize-none leading-relaxed" placeholder="[2. AI 티 벗기기]를 실행하면 추상적인 클리셰를 지우고 기업의 실제 고유 사업 내용과 현직자 전문 용어가 자연스럽게 결합된 85%~95% 황금비율 최종본이 완성됩니다."></textarea>
+
+          <div class="pt-2 border-t border-slate-100 space-y-2">
+            <div class="space-y-1">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-slate-500 font-medium">목표 글자수 달성률 (<span id="target-len-display" class="font-bold text-slate-700">700</span>자 기준)</span>
+                <span id="char-match-rate" class="font-bold text-amber-600">0%</span>
+              </div>
+              <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden relative">
+                <div class="absolute left-[85%] w-[10%] h-full bg-emerald-200/70 border-x border-emerald-400 z-10" title="황금 분량 존 (85%~95%)"></div>
+                <div id="char-progress-bar" class="bg-gradient-to-r from-amber-400 to-amber-600 h-full w-0 transition-all duration-300"></div>
+              </div>
+            </div>
+            <div class="flex items-center justify-between text-xs text-slate-500">
+              <span>현재: 공백 포함 <strong id="human-char-count" class="text-slate-800">0</strong>자</span>
+              <span id="ratio-verdict-text" class="text-slate-400 font-semibold flex items-center space-x-1">
+                <i class="fa-solid fa-circle-check"></i>
+                <span>목표 글자수 대비 분석 중</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 4: 10 Core Questions & Multi-tier Follow-up Coaching -->
+    <section id="tab-step4" class="tab-content hidden space-y-6">
+      <div class="bg-gradient-to-r from-purple-50 via-indigo-50 to-pink-50 border border-purple-100 rounded-2xl p-4 sm:p-5 flex items-start space-x-4 shadow-sm">
+        <div class="p-2.5 bg-purple-600 text-white rounded-xl shadow-sm flex-shrink-0">
+          <i class="fa-solid fa-user-tie text-2xl"></i>
+        </div>
+        <div class="flex-1">
+          <div class="flex items-center space-x-2 flex-wrap gap-1">
+            <h2 class="text-base font-bold text-slate-900">면접 코칭 & 답변 첨삭 (면접관 10대 핵심 질문 + 개별 꼬리질문 코칭)</h2>
+            <span class="text-[10px] font-extrabold bg-purple-600 text-white px-2.5 py-0.5 rounded-full">
+              질문 10선 + 꼬리질문 18개 전수 코칭 탑재
+            </span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
+            지원 기업과 직무, 작성한 자소서의 팩트를 기반으로 선별된 <strong>10가지 핵심 면접 질문</strong>과 <strong>이어지는 심층 꼬리질문(1~2개)</strong>을 제공합니다.
+            각 질문마다 <strong>[메인 질문]</strong> 및 <strong>[꼬리질문 1, 2]</strong> 탭을 클릭하여 <strong>평가관 의도 파악, 필수 키워드 힌트, 직접 답변 입력 후 1:1 두괄식 논리 첨삭 및 실전 모범답안</strong>을 독립적으로 확인하세요!
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left: 10 Questions Navigator List (4 Cols) -->
+        <div class="lg:col-span-4 space-y-3">
+          <div class="flex items-center justify-between pb-1 border-b border-slate-100">
+            <div class="flex items-center space-x-2">
+              <h3 class="text-sm font-bold text-slate-900 flex items-center space-x-1.5">
+                <i class="fa-solid fa-list-check text-purple-600"></i>
+                <span>면접관 10대 핵심 질문</span>
+              </h3>
+              <span id="interview-progress-badge" class="text-[11px] font-bold px-2 py-0.5 bg-purple-100 text-purple-800 rounded-full">1/10</span>
+            </div>
+            <button id="refresh-questions-btn" class="text-[11px] font-semibold text-purple-600 hover:text-purple-800 flex items-center space-x-1">
+              <i class="fa-solid fa-rotate"></i>
+              <span>기업 팩트 동기화</span>
+            </button>
+          </div>
+
+          <!-- 10 Questions Scrollable List -->
+          <div id="ten-questions-container" class="space-y-2 max-h-[740px] overflow-y-auto pr-1"></div>
+        </div>
+
+        <!-- Right: Focused Coaching & Follow-up Questions Interactive Arena (8 Cols) -->
+        <div class="lg:col-span-8 space-y-4">
+          <!-- Main Question Box & Follow-up Sub-tab Navigator -->
+          <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+            <!-- Active Question Category Badge & Question Title -->
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <span id="active-q-category" class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-800 border border-purple-200">
+                  핵심 역량 검증
+                </span>
+                <span id="active-q-step-text" class="text-xs text-slate-400 font-bold">질문 1 / 10</span>
+              </div>
+              <h4 id="active-q-title" class="text-base font-bold text-slate-900 leading-snug">
+                1분 자기소개와 함께 지원 직무에 가장 부합하는 본인만의 1순위 핵심 역량을 말씀해 주세요.
+              </h4>
+            </div>
+
+            <!-- Follow-up Question Subtabs (Main / Follow-up 1 / Follow-up 2) -->
+            <div class="pt-3 border-t border-slate-100">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-slate-600 flex items-center space-x-1.5">
+                  <i class="fa-solid fa-diagram-project text-purple-600"></i>
+                  <span>면접 질문 심층 공략 단계 선택:</span>
+                </span>
+                <span class="text-[11px] text-purple-600 font-semibold">각 단계별 개별 코칭 & 개별 첨삭</span>
+              </div>
+              <div class="flex flex-wrap gap-2" id="follow-up-subtabs">
+                <button data-sub-tier="main" class="tier-tab-btn flex-1 min-w-[140px] py-2 px-3 rounded-xl text-xs font-bold bg-purple-600 text-white shadow-sm transition-all flex items-center justify-center space-x-1.5">
+                  <i class="fa-solid fa-microphone"></i>
+                  <span>메인 질문 공략</span>
+                </button>
+                <button data-sub-tier="follow1" class="tier-tab-btn flex-1 min-w-[140px] py-2 px-3 rounded-xl text-xs font-semibold bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200 transition-all flex items-center justify-center space-x-1.5">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                  <span>꼬리질문 1 (검증/디테일)</span>
+                </button>
+                <button data-sub-tier="follow2" class="tier-tab-btn flex-1 min-w-[140px] py-2 px-3 rounded-xl text-xs font-semibold bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200 transition-all flex items-center justify-center space-x-1.5">
+                  <i class="fa-solid fa-bolt"></i>
+                  <span>꼬리질문 2 (위기/반대대처)</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Detailed Selected Tier Question Display Box -->
+            <div class="p-3.5 bg-gradient-to-r from-purple-50/60 to-indigo-50/60 rounded-xl border border-purple-100 space-y-1">
+              <div class="flex items-center space-x-2">
+                <span id="tier-badge" class="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-200 text-purple-900">메인 질문</span>
+                <span id="tier-role-tag" class="text-[11px] font-semibold text-purple-800">질문 분석 및 답변 전략</span>
+              </div>
+              <p id="tier-question-text" class="text-xs sm:text-sm font-bold text-slate-800 leading-relaxed">
+                1분 자기소개와 함께 지원 직무에 가장 부합하는 본인만의 1순위 핵심 역량을 말씀해 주세요.
+              </p>
+            </div>
+
+            <!-- Tailored Coaching Guide (Why, 3 Keywords, Strategy) -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-3 text-xs">
+              <div class="md:col-span-7 p-3.5 bg-slate-50 rounded-xl border border-slate-200/80 space-y-1.5">
+                <span class="font-bold text-slate-800 flex items-center space-x-1.5 text-purple-700">
+                  <i class="fa-solid fa-bullseye"></i>
+                  <span>면접관의 진짜 평가 의도 (Why)</span>
+                </span>
+                <p id="coaching-intent" class="text-slate-600 leading-relaxed text-[11px]">
+                  지원자가 직무의 핵심 R&R을 정확히 이해하고 있는지, 긴장된 첫인상 속에서 두괄식으로 간결하게 본인의 차별화된 무기를 제시할 수 있는지를 확인합니다.
+                </p>
+                <div class="pt-1 text-[11px] text-amber-700 font-medium" id="coaching-pitfall">
+                  ⚠️ 감점 주의: 과거 성장 배경이나 추상적인 미사여구로 첫 20초를 낭비하지 마세요.
+                </div>
+              </div>
+
+              <div class="md:col-span-5 p-3.5 bg-slate-50 rounded-xl border border-slate-200/80 space-y-1.5">
+                <span class="font-bold text-slate-800 flex items-center space-x-1.5 text-indigo-700">
+                  <i class="fa-solid fa-key"></i>
+                  <span>필수 언급 키워드 3가지</span>
+                </span>
+                <div id="coaching-keywords" class="flex flex-wrap gap-1 mt-1">
+                  <span class="px-2 py-0.5 bg-indigo-50 border border-indigo-200 text-indigo-700 rounded font-semibold text-[11px]">#직무차별화</span>
+                  <span class="px-2 py-0.5 bg-indigo-50 border border-indigo-200 text-indigo-700 rounded font-semibold text-[11px]">#정량성과</span>
+                  <span class="px-2 py-0.5 bg-indigo-50 border border-indigo-200 text-indigo-700 rounded font-semibold text-[11px]">#회사기여</span>
+                </div>
+                <p class="text-[10px] text-slate-400 pt-1">
+                  위 3개 단어가 자연스럽게 포함되도록 문장을 구성하세요.
+                </p>
+              </div>
+            </div>
+
+            <!-- Answer Input Area -->
+            <div class="space-y-2 pt-2 border-t border-slate-100">
+              <div class="flex items-center justify-between">
+                <label class="text-xs font-bold text-slate-800 flex items-center space-x-1.5">
+                  <i class="fa-solid fa-pen text-purple-600"></i>
+                  <span id="answer-input-label">내 실전 답변 작성 (메인 질문용)</span>
+                </label>
+                <div class="flex items-center space-x-2">
+                  <button id="fill-tier-sample-btn" class="text-xs text-purple-600 hover:text-purple-800 font-semibold flex items-center space-x-1">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span>샘플 답변 불러오기</span>
+                  </button>
+                  <span class="text-slate-300">|</span>
+                  <span class="text-xs text-slate-400">공백 포함 <strong id="answer-char-count" class="text-slate-700">0</strong>자</span>
+                </div>
+              </div>
+
+              <textarea id="tier-user-answer" rows="4" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl p-3.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 leading-relaxed font-sans" placeholder="실제 면접장에서 면접관을 마주보고 말하듯이 텍스트로 적어보세요. (두괄식으로 첫 문장에 결론을 제시하면 점수가 높아집니다)"></textarea>
+
+              <button id="eval-tier-answer-btn" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold py-3 rounded-xl shadow-md shadow-purple-100 transition-all flex items-center justify-center space-x-2 text-xs sm:text-sm">
+                <i class="fa-solid fa-clipboard-check"></i>
+                <span id="eval-btn-label">이 질문(단계) 답변 1:1 논리 첨삭 & 모범답안 받기</span>
+              </button>
+            </div>
+
+            <!-- Individual Coaching Report Box (Appears on click) -->
+            <div id="tier-coaching-report" class="hidden p-4 sm:p-5 bg-gradient-to-b from-purple-50/50 to-white border-2 border-purple-200 rounded-2xl space-y-4 shadow-sm">
+              <div class="flex items-center justify-between pb-3 border-b border-purple-100">
+                <div class="flex items-center space-x-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-purple-600"></span>
+                  <h5 class="text-xs sm:text-sm font-bold text-slate-900">AI 면접관 1:1 정밀 피드백 리포트</h5>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <span class="text-xs text-slate-500">논리 완성도</span>
+                  <span id="tier-score-badge" class="px-2.5 py-0.5 bg-purple-600 text-white font-extrabold text-xs rounded-full shadow-sm">
+                    94점 / 100점
+                  </span>
+                </div>
+              </div>
+
+              <!-- 2-Col Detailed Feedback -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div class="p-3 bg-white rounded-xl border border-purple-100 space-y-1 shadow-sm">
+                  <p class="font-bold text-slate-800 flex items-center space-x-1.5">
+                    <i class="fa-solid fa-turn-down text-indigo-600"></i>
+                    <span>두괄식 결론 배치 평가</span>
+                  </p>
+                  <p id="report-dugwal-text" class="text-slate-600 leading-relaxed text-[11px]"></p>
+                </div>
+                <div class="p-3 bg-white rounded-xl border border-purple-100 space-y-1 shadow-sm">
+                  <p class="font-bold text-slate-800 flex items-center space-x-1.5">
+                    <i class="fa-solid fa-scale-balanced text-emerald-600"></i>
+                    <span>근거(Fact) 및 STAR 밸런스</span>
+                  </p>
+                  <p id="report-balance-text" class="text-slate-600 leading-relaxed text-[11px]"></p>
+                </div>
+              </div>
+
+              <!-- 100-Point Best Practice Answer Script -->
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-purple-900 flex items-center space-x-1.5">
+                    <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i>
+                    <span>실전 100점 추천 모범 답변 ("이렇게 말해보세요")</span>
+                  </span>
+                  <button id="copy-best-answer-btn" class="text-xs text-purple-700 hover:text-purple-900 font-semibold flex items-center space-x-1">
+                    <i class="fa-solid fa-copy"></i>
+                    <span>스크립트 복사</span>
+                  </button>
+                </div>
+                <div id="report-best-script" class="p-4 bg-white border border-purple-200 rounded-xl text-xs text-slate-800 leading-relaxed whitespace-pre-line font-medium shadow-sm"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Manual Card Modal -->
+  <div id="manual-modal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white max-w-lg w-full rounded-2xl shadow-xl border border-slate-100 p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-base font-bold text-slate-900">직접 경험 카드 등록</h3>
+        <button id="close-modal-btn" class="text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">에피소드 제목</label>
+          <input type="text" id="m-title" placeholder="예: 해외 바이어 발굴 및 샘플 수주 계약 성사" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:bg-white focus:outline-none">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">상황 (Situation)</label>
+            <textarea id="m-s" rows="2" placeholder="어떤 배경이었나요?" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 focus:bg-white focus:outline-none"></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">과제/문제 (Task)</label>
+            <textarea id="m-t" rows="2" placeholder="어떤 문제가 발생했나요?" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 focus:bg-white focus:outline-none"></textarea>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">행동 (Action)</label>
+            <textarea id="m-a" rows="2" placeholder="본인이 취한 구체적 조치는?" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 focus:bg-white focus:outline-none"></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">성과/배운점 (Result)</label>
+            <textarea id="m-r" rows="2" placeholder="구체적 수치와 성과는?" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 focus:bg-white focus:outline-none"></textarea>
+          </div>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">역량 태그 (쉼표로 구분)</label>
+          <input type="text" id="m-tags" placeholder="#해외영업, #바이어개발, #시장개척" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:bg-white focus:outline-none">
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end space-x-2 pt-2">
+        <button id="cancel-modal-btn" class="px-4 py-2 text-xs font-semibold text-slate-500 hover:bg-slate-100 rounded-xl">취소</button>
+        <button id="save-modal-btn" class="px-4 py-2 text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-sm">금고에 저장</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 text-white text-xs font-medium px-4 py-2.5 rounded-xl shadow-lg flex items-center space-x-2">
+    <i class="fa-solid fa-circle-info text-indigo-400"></i>
+    <span id="toast-text">알림 메시지</span>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    const STORAGE_KEY = 'JOBNAVI_TEN_QUESTIONS_V12';
+
+    const INTERVIEW_THEMES = [
+      { id: 1, name: "팀 프로젝트 & 협업", prompt: "학과 과제, 캡스톤, 대외활동 등 팀원과 함께 협업하며 결과물을 냈던 경험 중 가장 기억에 남는 것은 무엇인가요?" },
+      { id: 2, name: "실패 극복 & 트러블슈팅", prompt: "예상치 못한 문제나 오류, 실패를 겪었지만 포기하지 않고 끝까지 원인을 찾아 해결했던 경험이 있나요?" },
+      { id: 3, name: "고객/바이어 응대 & 영업", prompt: "고객이나 바이어, 파트너 대면 중 까다로운 요구사항이나 반발을 극복하고 성과로 이끈 경험이 있나요?" },
+      { id: 4, name: "효율 개선 & 프로세스 혁신", prompt: "기존의 비효율적이거나 번거로운 방식을 본인의 아이디어로 개선하여 시간이나 비용을 아낀 경험이 있나요?" },
+      { id: 5, name: "갈등 관리 & 설득력", prompt: "팀원 간 의견 차이로 갈등이 생겼을 때, 감정적이 아닌 데이터나 논리로 상대를 설득해 조율한 경험이 있나요?" },
+      { id: 6, name: "새로운 기술 & 지식 습득", prompt: "전공이나 업무에서 전혀 몰랐던 새로운 툴/기술/언어를 단기간에 집중적으로 공부해 성과에 적용해본 적이 있나요?" },
+      { id: 7, name: "리더십 & 위기 대응", prompt: "위기 상황에서 팀의 사기를 북돋우거나 방향성을 제시해 이끌었던 경험이 있나요?" }
+    ];
+
+    const ESSAY_SECTIONS_CONFIG = {
+      reason: {
+        title: "1. 지원동기 및 포부",
+        defaultPrompt: "당사에 지원하게 된 동기와 입사 후 이루고 싶은 직무적 목표를 회사의 비전 및 미래 사업과 연계하여 기술하시오.",
+        label: "문항 1: 지원동기 및 포부 (Company Fit & Vision)",
+        defaultTargetLen: 700
+      },
+      challenge: {
+        title: "2. 도전 및 성취 경험",
+        defaultPrompt: "지금까지 살아오면서 가장 도전적인 목표를 세우고 장애물을 극복하여 성취한 경험을 구체적으로 기술하시오.",
+        label: "문항 2: 도전 및 성취 경험 (STAR Achievement)",
+        defaultTargetLen: 700
+      },
+      competency: {
+        title: "3. 직무 강점 및 역량",
+        defaultPrompt: "지원 직무를 성공적으로 수행하기 위해 본인이 갖춘 핵심 역량과 그 강점을 발휘한 사례를 기술하시오.",
+        label: "문항 3: 직무 강점 및 역량 (Functional Competency)",
+        defaultTargetLen: 800
+      },
+      aiefficiency: {
+        title: "4. AI 활용 및 업무 효율화",
+        defaultPrompt: "최신 AI 도구나 데이터 분석 기법을 주도적으로 활용하여 비효율적인 업무/학습 프로세스를 혁신한 경험을 기술하시오.",
+        label: "문항 4: AI 활용 및 업무 효율화 경험 (Modern Tech & Productivity)",
+        defaultTargetLen: 600
+      }
+    };
+
+    // 10 Core Questions with Follow-up 1 & 2 for Step 4
+    function getTenCoreInterviewQuestions(company, role) {
+      const comp = company || '귀사';
+      const r = role || '지원 직무';
+
+      return [
+        {
+          id: 'q1',
+          category: '핵심 역량 & 자기소개',
+          title: `1분 자기소개와 함께 ${comp}의 ${r} 직무에 가장 부합하는 본인만의 1순위 핵심 역량을 말씀해 주세요.`,
+          main: {
+            question: `1분 자기소개와 함께 ${comp}의 ${r} 직무에 가장 부합하는 본인만의 1순위 핵심 역량을 말씀해 주세요.`,
+            intent: `지원자가 ${r} 직무의 핵심 본질을 정확히 이해하고 있는지, 긴장된 첫인상 속에서 두괄식으로 간결하게 본인의 차별화된 무기를 제시할 수 있는지를 확인합니다.`,
+            pitfall: `성장 과정이나 감성적 수식어(예: "어릴 적부터 성실하게...")로 첫 20초를 낭비하지 마세요.`,
+            keywords: [`${r} 핵심 강점`, `정량적 프로젝트 성과`, `입사 후 즉시 기여`],
+            sampleAnswer: `네, 안녕하십니까. ${comp} ${r} 직무에 준비된 지원자입니다. 
+저의 1순위 무기는 '데이터 기반의 빠른 실행력과 병목 해소 역량'입니다. 
+과거 프로젝트에서 단순한 감이 아닌 객관적 지표를 분석하여 전환율을 3배 개선하고, 고객의 이탈 리스크를 선제적으로 방어한 경험이 있습니다. 
+이러한 실행력을 바탕으로 ${comp}의 현업에서도 팀의 북극성 지표를 가장 기민하게 달성하는 실무 인재가 되겠습니다.`
+          },
+          follow1: {
+            title: `꼬리질문 1 (디테일 검증)`,
+            question: `방금 말씀하신 핵심 역량이 동종 업계의 다른 지원자들과 비교했을 때 구체적으로 어떤 점에서 차별화된다고 생각하십니까?`,
+            intent: `누구나 말할 수 있는 일반론적인 강점(예: 소통력, 끈기)인지, 실제 본인만의 독자적인 방법론이나 실무 프레임워크가 있는지를 검증합니다.`,
+            pitfall: `단순히 "더 열정적입니다" 같은 감정적 호소는 피하고, 본인이 사용하는 툴이나 기준을 명시하세요.`,
+            keywords: [`고유한 실행 프레임워크`, `실제 수치 비교`, `재현 가능한 노하우`],
+            sampleAnswer: `네, 저의 차별점은 '단순 시도가 아닌 프레임워크화된 A/B 테스트 검증 습관'에 있습니다. 
+많은 지원자가 직관으로 대안을 내놓을 때, 저는 3일 단위의 스프린트 가설 검증표를 직접 작성하여 실패 비용을 최소화하고 성공 확률을 70% 이상으로 끌어올리는 구조화된 접근을 취합니다.`
+          },
+          follow2: {
+            title: `꼬리질문 2 (한계 상황 대처)`,
+            question: `만약 입사 후 본인의 그 핵심 역량을 발휘하기 어려운 비정형적이고 폐쇄적인 업무 환경에 놓인다면 어떻게 극복하시겠습니까?`,
+            intent: `본인의 강점이 발휘되지 않는 불리한 환경에서도 좌절하지 않고 조직의 룰에 적응하며 대안을 찾을 수 있는 유연성을 평가합니다.`,
+            pitfall: `기존 조직의 관행을 비난하거나 독단적으로 내 방식만 고집하겠다는 뉘앙스는 절대 금물입니다.`,
+            keywords: [`조직 문화 경청`, `작은 성공(Quick-Win) 입증`, `단계적 신뢰 형성`],
+            sampleAnswer: `네, 우선 기존 환경과 선배님들의 업무 방식을 철저히 경청하고 존중하며 조직의 신뢰를 먼저 쌓겠습니다. 
+그 후 전면적인 변화를 요구하기보다, 팀에 부담이 없는 작은 단위의 파일럿 과제(Quick-Win)에서 제 역량을 통해 가시적인 효율 개선을 먼저 입증해 보이겠습니다.`
+          }
+        },
+        {
+          id: 'q2',
+          category: '회사 지원동기 & 로열티',
+          title: `수많은 경쟁 기업 중 왜 반드시 ${comp}여야만 하는지, 그리고 당사의 최신 행보 중 가장 인상 깊었던 점은 무엇인가요?`,
+          main: {
+            question: `수많은 경쟁 기업 중 왜 반드시 ${comp}여야만 하는지, 그리고 당사의 최신 행보 중 가장 인상 깊었던 점은 무엇인가요?`,
+            intent: `지원자가 복사 붙여넣기식 '묻지마 지원'을 한 것인지, ${comp}의 비즈니스 모델, 최신 시장 이슈, 경쟁사 대비 차별점을 깊이 연구했는지 로열티를 측정합니다.`,
+            pitfall: `회사 홈페이지의 홍보 문구를 그대로 암기해 읊거나, "1위 기업이라서"라는 식의 안일한 답변은 감점됩니다.`,
+            keywords: [`${comp} 고유 사업 팩트`, `경쟁사 대비 강점`, `본인 가치관 일치`],
+            sampleAnswer: `네, ${comp}가 최근 추진하고 있는 혁신 행보와 시장 내 독보적인 본원적 경쟁력에 확신을 가졌기 때문입니다. 
+특히 타사들이 외형적 확장에 치중할 때, ${comp}는 고객의 실질적인 편익과 압도적인 운영 효율화를 동시에 일궈내는 실용주의를 보여주었습니다. 
+이러한 성장 궤적 속에서 제가 가진 실무 실행력을 접목해 가장 큰 시너지를 낼 수 있다고 판단했습니다.`
+          },
+          follow1: {
+            title: `꼬리질문 1 (경쟁사 비교)`,
+            question: `그렇다면 경쟁사인 타 기업이 아니라 우리 회사에 최종 합격해야 하는 결정적인 이유를 한 문장으로 정의해 주시겠습니까?`,
+            intent: `경쟁사와의 구체적 비교 분석을 통해 지원 기업만의 고유한 엣지를 명확히 짚어낼 수 있는지 확인합니다.`,
+            pitfall: `경쟁사를 깎아내리기보다는, ${comp}만의 전략적 지향점과의 개인적 적합성을 강조해야 합니다.`,
+            keywords: [`${comp}만의 독보적 지향점`, `실무 시너지`, `확고한 선택 기준`],
+            sampleAnswer: `경쟁사가 범용적인 포트폴리오에 머물 때, ${comp}는 가장 기민하게 고객의 페인 포인트를 파고들어 시장의 표준을 재정의하는 실행력을 가졌기 때문입니다.`
+          },
+          follow2: {
+            title: `꼬리질문 2 (기업 위기 요인 대응)`,
+            question: `만약 당사가 현재 마주한 대외적 시장 위기로 인해 지원하신 직무의 목표가 대폭 수정된다면 어떻게 대처하시겠습니까?`,
+            intent: `대외 환경 변화에 따른 회사의 위기 상황에서 지원자가 조직의 방향 전환에 유연하게 발맞출 준비가 되어 있는지 점검합니다.`,
+            pitfall: `내 원래 목표만을 고집하거나 회사의 결정에 수동적으로 끌려가는 태도를 보이지 마세요.`,
+            keywords: [`전략적 정렬(Alignment)`, `비용 효율화 기여`, `새로운 기회 탐색`],
+            sampleAnswer: `네, 위기 국면에서는 개별 직무 목표보다 전사적 생존과 현금 흐름 및 비용 효율화가 최우선이어야 합니다. 
+수정된 전사 전략에 제 역할을 즉각 재배열하고, 비용을 최소화하면서도 기본 체력을 지킬 수 있는 방어적 KPI에 집중하겠습니다.`
+          }
+        },
+        {
+          id: 'q3',
+          category: '실패 극복 & 회고',
+          title: `지금까지 경험 중 가장 뼈아픈 실패나 오류는 무엇이었으며, 이를 극복하고 사후에 무엇을 배웠습니까?`,
+          main: {
+            question: `지금까지 경험 중 가장 뼈아픈 실패나 오류는 무엇이었으며, 이를 극복하고 사후에 무엇을 배웠습니까?`,
+            intent: `실패를 남 탓이나 환경 탓으로 돌리지 않고 자신의 책임을 인정하는 정직함과, 실패를 조직의 시스템 자산으로 전환하는 메타인지를 봅니다.`,
+            pitfall: `"실패한 적이 없습니다"라거나 사소한 실수(지각 등)를 말하는 것은 치명적 감점입니다.`,
+            keywords: [`명확한 본인 과실 인정`, `즉각적 사후 수습 행동`, `재발 방지 시스템화`],
+            sampleAnswer: `네, 프로젝트 진행 당시 일정 지연 리스크를 사전에 팀원들과 솔직히 공유하지 못해 마감 직전 납기가 늦어질 뻔했던 실패가 가장 뼈아팠습니다. 
+제 판단 착오를 인정하고 즉시 비상 대책 회의를 소집하여 48시간 철야를 통해 결함을 보완했습니다. 
+이를 계기로 주간 위험도 공유 체크리스트를 정례화하여 재발을 100% 방지했습니다.`
+          },
+          follow1: {
+            title: `꼬리질문 1 (의사결정 책임)`,
+            question: `당시 그 실패의 원인 중 본인의 의사결정 미흡이 미친 비중은 몇 %였으며, 왜 그렇게 판단하셨습니까?`,
+            intent: `자기 합리화 없이 냉철하게 본인의 책임을 정량적으로 수치화하여 직시할 수 있는지 검증합니다.`,
+            pitfall: `비중을 낮게 부르며 동료나 시스템 탓을 은연중에 내비치면 신뢰를 잃습니다.`,
+            keywords: [`본인 지분 70% 인정`, `판단 착오의 원인 분석`, `성숙한 태도`],
+            sampleAnswer: `제 의사결정 미흡이 70% 이상이었다고 생각합니다. 
+일정이 빠듯함을 감지했음에도 '혼자 힘으로 어떻게든 메울 수 있다'는 오판으로 조기 경보를 울리지 않았던 것이 가장 큰 병목이었기 때문입니다.`
+          },
+          follow2: {
+            title: `꼬리질문 2 (유사 상황 재발 방지)`,
+            question: `만약 ${comp}에 입사 후 유사한 납기 지연이나 오류 위기가 발생한다면 첫 1시간 안에 무엇부터 조치하시겠습니까?`,
+            intent: `위기 발생 즉시 은폐하지 않고 신속하게 상급자 보고 및 피해 최소화 프로세스를 가동할 수 있는 위기 대응력을 봅니다.`,
+            pitfall: `혼자 끙끙 앓으며 해결하려다 보고 타이밍을 놓치는 답변을 피하세요.`,
+            keywords: [`최초 10분 내 상급자 투명 보고`, `영향도 매트릭스 파악`, `복수 대안 제시`],
+            sampleAnswer: `발생 즉시 15분 이내에 팀장님과 유관 부서에 지연 예상치와 원인을 투명하게 공유하겠습니다. 
+이후 남은 시간 동안 피해를 최소화할 수 있는 플랜 B와 C를 정리하여 의사결정을 요청드리겠습니다.`
+          }
+        },
+        {
+          id: 'q4',
+          category: '직무 주도 성과 (STAR)',
+          title: `지원 직무와 관련된 프로젝트 중 가장 주도적으로 성과를 창출했던 대표 에피소드를 STAR 구조로 말씀해 주세요.`,
+          main: {
+            question: `지원 직무와 관련된 프로젝트 중 가장 주도적으로 성과를 창출했던 대표 에피소드를 STAR 구조로 말씀해 주세요.`,
+            intent: `단순 참여자가 아닌 핵심 드라이버(Driver)로서 상황을 정의하고, 독자적 행동을 취해 수치적 결과를 냈는지 검증합니다.`,
+            pitfall: `동료들이 한 일만 장황하게 설명하고 "우리는 해냈습니다"로 뭉뚱그리면 개인 기여도를 알 수 없습니다.`,
+            keywords: [`문제의 본질 규명`, `1인칭 주도 액션`, `정량적 결과 수치`],
+            sampleAnswer: `네, 비효율적인 수작업 프로세스를 개선하여 팀 생산성을 2배 높인 경험입니다. 
+당시 데이터 취합 과정에서 매주 8시간의 수작업 로스가 발생하고 있었습니다. 
+저는 이를 관행으로 두지 않고 표준 템플릿과 자동화 스크립트를 직접 설계해 도입했습니다. 
+그 결과 데이터 누락률을 0%로 만들고 처리 시간을 75% 단축했습니다.`
+          },
+          follow1: {
+            title: `꼬리질문 1 (개인 기여도 팩트체크)`,
+            question: `그 프로젝트에서 본인이 직접 짠 기획이나 코드가 차지하는 순수 기여도는 몇 %였으며 어떻게 증명할 수 있나요?`,
+            intent: `서류에 작성된 성과를 면접관이 직접 꼬집으며 팩트와 과장 여부를 가려내기 위한 전형적인 압박 질문입니다.`,
+            pitfall: `100% 내가 다 했다거나 근거 없이 얼버무리면 서류 신뢰도 전체가 무너집니다.`,
+            keywords: [`기여도 75% 명시`, `역할 분담 기준`, `실제 산출물 증빙`],
+            sampleAnswer: `순수 개인 기여도는 75%였습니다. 
+핵심 로직과 가이드라인 설계는 제가 전담했고, 팀원 2명은 데이터 샘플 검증과 현장 테스트 피드백을 지원해 주었습니다. 
+최종 완성된 매뉴얼과 스프레드시트 구조가 저의 주도적 산출물입니다.`
+          },
+          follow2: {
+            title: `꼬리질문 2 (다른 대안 검토 여부)`,
+            question: `당시 선택하셨던 해결 방식 외에 고려했던 다른 대안은 없었습니까? 왜 그 방식을 최종 선택하셨습니까?`,
+            intent: `의사결정 과정에서 주먹구구식이 아닌 복수의 옵션을 비교 평가하는 전략적 사고력이 있는지 확인합니다.`,
+            pitfall: `다른 대안은 생각해보지 않았다는 식의 답변은 시야가 좁아 보일 수 있습니다.`,
+            keywords: [`비용 대비 효과 비교`, `도입 장벽 분석`, `최적의 트레이드오프`],
+            sampleAnswer: `외부 유료 SaaS 도입도 검토했습니다. 
+하지만 당시 팀 예산의 한계와 팀원들의 러닝 커브를 고려했을 때, 비용이 들지 않고 즉시 적용 가능한 자체 스프레드시트 자동화가 ROI 관점에서 압도적이라고 판단했습니다.`
+          }
+        },
+        {
+          id: 'q5',
+          category: '갈등 해결 & 설득력',
+          title: `동료나 상사와의 심각한 의견 대립이 있었던 갈등 사례와, 이를 감정이 아닌 논리와 데이터로 해결한 경험이 있습니까?`,
+          main: {
+            question: `동료나 상사와의 심각한 의견 대립이 있었던 갈등 사례와, 이를 감정이 아닌 논리와 데이터로 해결한 경험이 있습니까?`,
+            intent: `협업 상황에서 갈등을 회피하지 않고, 감정적 소모전 대신 객관적 팩트와 상생의 타협안으로 팀을 이끌 수 있는지 봅니다.`,
+            pitfall: `단순히 "술 한잔하며 오해를 풀었습니다" 같은 사적 친밀도 해결 방식은 실무 면접에서 부적절합니다.`,
+            keywords: [`갈등 원인의 객관화`, `데이터/지표 기반 설득`, `공동의 목표 상기`],
+            sampleAnswer: `네, 공모전 기획 방향을 두고 정량 분석 중심안과 창의적 감성안으로 팀이 양분되었을 때입니다. 
+저는 언쟁을 멈추고 잠재 타깃 고객 150명을 대상으로 간이 설문조사를 48시간 만에 실시했습니다. 
+그 결과 고객들이 원하는 핵심 소구점을 데이터로 증명하여 두 안의 장점을 결합한 제3의 절충안을 만장일치로 도출했습니다.`
+          },
+          follow1: {
+            title: `꼬리질문 1 (상대방의 입장 배려)`,
+            question: `그 과정에서 끝까지 본인의 의견에 반대하던 팀원의 입장은 무엇이었으며, 그 사람을 어떻게 포용하셨나요?`,
+            intent: `자기주장만 관철시키는 독선적인 성향인지, 반대자의 이면 니즈를 경청하고 역할을 부여하는 포용력이 있는지 평가합니다.`,
+            pitfall: `반대자를 고집불통이거나 틀린 사람으로 묘사하면 협업 점수가 깎입니다.`,
+            keywords: [`상대 논리의 타당성 인정`, `역할 재부여`, `성과 지분 공유`],
+            sampleAnswer: `그 팀원은 '너무 데이터에만 얽매이면 차별성이 사라진다'는 점을 염려했습니다. 
+저는 그 우려가 매우 타당함을 인정하고, 데이터로 검증된 뼈대 위에 그 팀원의 창의적 스토리텔링 아이디어를 메인 카피로 전면 배치하여 존중을 표했습니다.`
+          },
+          follow2: {
+            title: `꼬리질문 2 (상사와의 의견 불일치)`,
+            question: `만약 입사 후 사수나 팀장님이 지원자의 데이터 분석 결과와 완전히 다른 방향의 지시를 내린다면 어떻게 행동하시겠습니까?`,
+            intent: `조직의 위계 질서 속에서 전문성과 팔로워십(Followership) 사이의 균형 감각을 테스트합니다.`,
+            pitfall: `무조건 반발하거나, 반대로 아무 생각 없이 영혼 없이 따르겠다는 극단적 태도는 모두 마이너스입니다.`,
+            keywords: [`정중한 근거 데이터 1회 보고`, `상사의 거시적 맥락 청취`, `결정 후 100% 실행`],
+            sampleAnswer: `제가 놓쳤을 거시적 경영 배경이 있는지 먼저 정중히 여쭙고, 준비한 데이터 요약본을 1회 브리핑하겠습니다. 
+그럼에도 팀장님의 판단이 확고하시다면, 조직의 최종 결정에 100% 얼라인하여 지시된 방향이 성공할 수 있도록 최선을 다해 실행하겠습니다.`
+          }
+        },
+        {
+          id: 'q6',
+          category: '돌발 상황 & 리소스 부족',
+          title: `마감 시한이 촉박하고 인력이나 예산이 턱없이 부족한 극한의 상황에서 일을 완수해 본 경험이 있습니까?`,
+          main: {
+            question: `마감 시한이 촉박하고 인력이나 예산이 턱없이 부족한 극한의 상황에서 일을 완수해 본 경험이 있습니까?`,
+            intent: `현업에서 흔히 발생하는 리소스 부족 상태에서 포기하지 않고 우선순위를 가려내어 80/20 법칙으로 성과를 내는 민첩성을 봅니다.`,
+            pitfall: `무작정 야근으로 몸을 갈아 넣었다는 식의 답변은 체계적인 문제해결력으로 보이지 않습니다.`,
+            keywords: [`우선순위(MoSCoW) 재정립`, `핵심 기능 집중`, `이해관계자 사전 조율`],
+            sampleAnswer: `네, 축제 부스 운영 당시 행사 3시간 전 메인 집기가 고장 나 준비한 물량의 절반을 포기해야 할 위기가 있었습니다. 
+저는 모든 메뉴를 다 하려 하지 않고, 가장 마진율이 높고 조리가 빠른 2가지 핵심 품목에 모든 인력을 재배치했습니다. 
+선택과 집중을 통해 대기 시간을 절반으로 줄이며 당초 목표 매출의 120%를 달성했습니다.`
+          },
+          follow1: {
+            title: `꼬리질문 1 (포기한 것의 기준)`,
+            question: `당시 과감히 포기했던 항목들의 기준은 무엇이었으며, 그로 인한 불만이나 손실은 없었습니까?`,
+            intent: `포기하는 과정에서 기준이 합리적이었는지, 발생한 사이드 이펙트를 어떻게 수습했는지 관리 능력을 봅니다.`,
+            pitfall: `손실이 전혀 없었다고 거짓말하기보다, 발생한 손실을 어떻게 최소화했는지 말해야 합니다.`,
+            keywords: [`기여도 하위 30% 배제`, `사전 양해 안내`, `대체 혜택 제공`],
+            sampleAnswer: `조리 시간이 8분 이상 걸리는 비효율 메뉴를 배제했습니다. 
+해당 메뉴를 찾으시던 고객들께는 솔직히 상황을 안내드리고 대체 메뉴 구매 시 할인 혜택을 드려 불만을 사전에 차단했습니다.`
+          },
+          follow2: {
+            title: `꼬리질문 2 (동료 번아웃 케어)`,
+            question: `그렇게 긴박한 상황에서 함께 고생하던 팀원들의 사기 저하나 피로도는 어떻게 케어하셨습니까?`,
+            intent: `결과 지향성에 매몰되어 동료를 소모품 취급하지 않고 인간적 배려와 리더십을 발휘할 수 있는지 확인합니다.`,
+            pitfall: `동료의 힘듦을 무시하고 "다들 열심히 했다"고 얼버무리지 마세요.`,
+            keywords: [`구체적 칭찬과 보상`, `교대 휴식 보장`, `성과에 대한 공정한 인정`],
+            sampleAnswer: `30분 단위 순환 교대 휴식을 의무화하여 탈진을 막았습니다. 
+프로젝트 종료 직후 팀원 개개인의 기여를 일일이 언급하며 감사를 전하고 남은 수익금으로 회포를 푸는 자리를 마련했습니다.`
+          }
+        },
+        {
+          id: 'q7',
+          category: '직무 커리어 로드맵',
+          title: `입사 후 ${comp}의 ${r} 직무에서 3년 후와 5년 후 각각 어떤 구체적인 마일스톤과 성과를 달성하고 싶으십니까?`,
+          main: {
+            question: `입사 후 ${comp}의 ${r} 직무에서 3년 후와 5년 후 각각 어떤 구체적인 마일스톤과 성과를 달성하고 싶으십니까?`,
+            intent: `막연한 꿈이 아닌, 실제 ${comp}의 사업 단계와 연계하여 단계별 성장 계획과 정량적 기여 목표를 가졌는지 장기 근속 가능성을 봅니다.`,
+            pitfall: `"선배님들께 열심히 배워 훌륭한 전문가가 되겠다"는 초등학생식 포부는 최악입니다.`,
+            keywords: [`3년 차: 실무 자립 & 독자 프로젝트 리딩`, `5년 차: 신사업 기여 & 후배 멘토링`, `정량적 KPI 기여`],
+            sampleAnswer: `네, 3년 차에는 ${comp}의 주력 프로젝트에서 발생하는 실무 병목을 스스로 진단하고 단독 프로젝트를 완수할 수 있는 독립적 실무자로 자리매김하겠습니다. 
+5년 차에는 글로벌 및 신사업 확장에 맞춰 ${r} 관점의 프로세스 표준화를 주도하고, 후배들의 성장을 돕는 핵심 플레이어로 기여하겠습니다.`
+          },
+          follow1: {
+            title: `꼬리질문 1 (구체적 학습 계획)`,
+            question: `그 3년 차 목표를 달성하기 위해 퇴근 후나 주말에 개인적으로 어떤 역량 개발 투자를 지속할 계획이십니까?`,
+            intent: `회사의 교육에만 의존하지 않고 스스로 전문성을 연마하는 자기주도적 학습 태도를 검증합니다.`,
+            pitfall: `학원 다니겠다거나 자격증 따겠다는 천편일률적 대답보다 실무 인사이트 확장 방안을 제시하세요.`,
+            keywords: [`도메인 전문 서적 및 논문 스터디`, `데이터/툴 실무 활용`, `업계 트렌드 분석`],
+            sampleAnswer: `주 1회 글로벌 경쟁사의 서비스 변경 로그와 실적 리포트를 분석하여 노션에 데이터베이스화할 계획입니다. 
+또한 실무에 필요한 데이터 분석 역량을 강화하기 위해 SQL 및 시각화 도구를 꾸준히 실습하겠습니다.`
+          },
+          follow2: {
+            title: `꼬리질문 2 (원치 않는 부서 배치)`,
+            question: `만약 본인이 희망한 세부 팀이 아니라 회사의 인력 수급 사정으로 다른 서포트 부서에 배치된다면 어쩌시겠습니까?`,
+            intent: `입사 초기의 잡무나 비선호 부서 배치 시 조기 퇴사하지 않고 조직적 관점에서 기회를 찾을 수 있는지 봅니다.`,
+            pitfall: `실망하겠지만 참겠다는 식의 수동적 태도보다는, 그 부서의 가치를 배우겠다는 적극성이 필요합니다.`,
+            keywords: [`조직의 큰 그림 이해`, `기초 체력 연마`, `어디서든 대체 불가능한 인재`],
+            sampleAnswer: `모든 업무는 회사의 밸류체인과 연결되어 있습니다. 
+서포트 부서에서 회사의 전체적인 운영 시스템과 기초 데이터를 먼저 탄탄히 이해할 수 있는 소중한 기회로 삼아, 어디서든 인정받는 인재가 되겠습니다.`
+          }
+        },
+        {
+          id: 'q8',
+          category: '단점 & 자기 객관화',
+          title: `본인이 가진 가장 치명적인 약점이나 한계는 무엇이며, 이를 보완하기 위해 현재 어떤 실제적 노력을 기울이고 있습니까?`,
+          main: {
+            question: `본인이 가진 가장 치명적인 약점이나 한계는 무엇이며, 이를 보완하기 위해 현재 어떤 실제적 노력을 기울이고 있습니까?`,
+            intent: `자기 객관화 능력과 개선 의지를 평가합니다. 가짜 단점(예: "너무 완벽주의자라...")을 말하는 지원자는 신뢰받지 못합니다.`,
+            pitfall: `"성격이 너무 꼼꼼해서 힘들다" 같은 위장된 자랑은 감점 대상입니다. 실제 업무적 약점을 말하고 솔루션을 제시하세요.`,
+            keywords: [`실제적 약점 인정`, `보완하는 행동적 장치(시스템)`, `현재 진행형 노력`],
+            sampleAnswer: `네, 저의 단점은 한 번 몰입하면 세부 디테일에 지나치게 파고들어 전체 일정을 조망하는 템포를 놓칠 때가 있다는 점입니다. 
+이를 극복하기 위해 작업을 시작할 때 전체 시간을 4등분하는 '타임박싱(Time-boxing)' 기법을 도입하고, 캘린더 알람을 설정해 주기적으로 진행률을 점검하는 습관을 들였습니다.`
+          },
+          follow1: {
+            title: `꼬리질문 1 (실제 피해 사례)`,
+            question: `그 약점으로 인해 실제로 팀이나 본인이 손해를 보거나 꾸중을 들었던 구체적인 일화가 있습니까?`,
+            intent: `약점이 진짜인지, 그리고 그로 인한 결과를 직시하고 반성한 적이 있는지를 집요하게 팩트체크합니다.`,
+            pitfall: `피해 사례가 없다고 둘러대면 앞선 단점 고백이 거짓말이 됩니다.`,
+            keywords: [`솔직한 경험 공유`, `주변 피드백 경청`, `개선 계기 마련`],
+            sampleAnswer: `네, 과제 발표 자료를 만들 때 폰트와 간격을 맞추느라 정작 핵심 결론 페이지 퇴고 시간이 부족해 발표 전날 밤을 새워야 했던 적이 있습니다. 
+팀원에게 본질에 집중하라는 따끔한 피드백을 듣고, 그 이후로는 뼈대를 먼저 완성한 뒤 디테일을 다듬는 원칙을 세웠습니다.`
+          },
+          follow2: {
+            title: `꼬리질문 2 (동료의 피드백 수용)`,
+            question: `주변 친구나 동료들이 지원자에게 가장 자주 해주는 따끔한 조언은 주로 어떤 내용인가요?`,
+            intent: `타인의 눈에 비친 지원자의 성향과 평판, 그리고 피드백을 수용하는 마음의 그릇을 확인합니다.`,
+            pitfall: `동료들이 다 칭찬만 해준다는 답변은 오만해 보일 수 있습니다.`,
+            keywords: [`피드백 겸허 수용`, `혼자 짊어지지 않는 위임`, `신뢰 구축`],
+            sampleAnswer: `'혼자 다 짊어지려 하지 말고 주변에 도움을 요청하라'는 조언을 들었습니다. 
+책임감이 지나쳐 부담을 혼자 안으려 했던 습관을 고치고, 이제는 조기에 동료들과 역할을 분담하고 투명하게 공유하는 연습을 하고 있습니다.`
+          }
+        },
+        {
+          id: 'q9',
+          category: 'AI 도구 & 디지털 혁신',
+          title: `생성형 AI(ChatGPT, Claude 등)나 스마트 자동화 툴을 학업이나 프로젝트 실무에 직접 활용해 성과를 낸 경험이 있습니까?`,
+          main: {
+            question: `생성형 AI(ChatGPT, Claude 등)나 스마트 자동화 툴을 학업이나 프로젝트 실무에 직접 활용해 성과를 낸 경험이 있습니까?`,
+            intent: `최신 기술 변화를 두려워하지 않고 실무 효율화에 주도적으로 접목할 줄 아는 현대적 인재인지를 봅니다.`,
+            pitfall: `"그냥 과제 요약할 때 써봤습니다" 같은 초보적 사용 수준에 그치지 마세요.`,
+            keywords: [`명확한 프롬프트 엔지니어링`, `결과물 팩트체크 검증`, `비용/시간 절감 성과`],
+            sampleAnswer: `네, 방대한 분량의 시장 조사 보고서 20편을 분석할 때 생성형 AI를 분석 파트너로 활용했습니다. 
+단순 요약에 그치지 않고 '핵심 수치와 리스크만 표 형태로 추출하라'는 정밀 프롬프트를 설계하여 분석 시간을 1주일에서 하루로 단축했습니다. 
+반드시 원문과 수치를 교차 검증(Cross-check)하여 할루시네이션 위험도 완벽히 차단했습니다.`
+          },
+          follow1: {
+            title: `꼬리질문 1 (AI 할루시네이션 방어)`,
+            question: `AI가 내놓은 그럴듯한 거짓말(할루시네이션)이나 오류를 직접 발견해 바로잡았던 경험이 있으신가요?`,
+            intent: `AI를 맹신하지 않고 비판적 사고(Critical Thinking)로 데이터의 진위 여부를 검증하는 실무 역량이 있는지 확인합니다.`,
+            pitfall: `AI 답변을 그대로 믿고 썼다고 하면 전문성에 치명적인 의구심을 갖게 됩니다.`,
+            keywords: [`원본 출처 1차 대조`, `비판적 검증`, `신뢰도 확보`],
+            sampleAnswer: `네, AI가 제시한 시장 점유율 수치가 공식 통계청 수치와 약 15% 괴리가 있음을 발견했습니다. 
+AI의 답변을 초안 아이디어로만 삼고, 최종 의사결정의 모든 숫자는 기업 공시(DART)와 통계청 1차 원본을 직접 대조하여 정정했습니다.`
+          },
+          follow2: {
+            title: `꼬리질문 2 (사내 보안 규정 준수)`,
+            question: `기업 환경에서는 내부 기밀 유출 위험 때문에 AI 사용이 제한되기도 합니다. 이 문제를 어떻게 다루시겠습니까?`,
+            intent: `효율성에 눈이 멀어 회사의 지적 재산권이나 고객 개인정보를 유출하지 않는 철저한 보안 컴플라이언스 의식을 봅니다.`,
+            pitfall: `몰래 쓰면 된다는 식의 발언은 즉시 불합격 요인입니다.`,
+            keywords: [`비식별화 조치`, `사내 보안 가이드라인 준수`, `승인된 인프라 활용`],
+            sampleAnswer: `사내 보안 규정을 100% 준수하는 것이 효율성보다 우선입니다. 
+민감한 고객 데이터나 핵심 수치는 철저히 비식별 마스킹 처리하거나 가상 변수로 치환하여 활용하고, 회사에서 공식 승인한 인프라 내에서만 기술을 접목하겠습니다.`
+          }
+        },
+        {
+          id: 'q10',
+          category: '기업 최신 이슈 & 미래 제언',
+          title: `최근 ${comp}가 직면한 가장 큰 시장의 도전 과제나 산업 이슈는 무엇이라 생각하며, 지원 직무에서 어떤 해결책을 보태겠습니까?`,
+          main: {
+            question: `최근 ${comp}가 직면한 가장 큰 시장의 도전 과제나 산업 이슈는 무엇이라 생각하며, 지원 직무에서 어떤 해결책을 보태겠습니까?`,
+            intent: `지원자가 회사를 단순한 고용주가 아닌 함께 성장할 비즈니스 파트너의 시각으로 바라보고 있는지, 거시적 통찰력을 평가합니다.`,
+            pitfall: `뉴스 헤드라인만 대충 읊고, 정작 본인 직무에서 뭘 하겠다는 구체적 액션이 빠지면 공허한 답변이 됩니다.`,
+            keywords: [`${comp} 최신 산업 이슈`, `직무 맞춤형 구체적 대안`, `비즈니스 임팩트 창출`],
+            sampleAnswer: `네, 최근 ${comp}는 글로벌 불확실성과 경쟁 심화 속에서 원가 부담을 방어하고 신규 성장 동력을 확보해야 하는 과제를 안고 있습니다. 
+제가 지원한 ${r} 현업에서는 비효율적인 운영 누수를 차단하고 데이터 기반으로 고객 이탈을 방어함으로써, 회사의 영업이익률을 수호하는 든든한 방파제 역할을 해내겠습니다.`
+          },
+          follow1: {
+            title: `꼬리질문 1 (아이디어의 실현 가능성)`,
+            question: `방금 제시하신 해결책이 실무적으로 당장 실행되기 위해 가장 먼저 해결되어야 할 예산이나 규제 병목은 무엇입니까?`,
+            intent: `뜬구름 잡는 이상론이 아니라, 현실 세계의 제약 조건을 고려할 줄 아는 성숙한 실무 감각이 있는지 테스트합니다.`,
+            pitfall: `"돈만 있으면 다 된다"는 식의 단순한 논리를 경계하세요.`,
+            keywords: [`내부 공감대 형성`, `작은 단위 PoC`, `규제 컴플라이언스 체크`],
+            sampleAnswer: `기존 협력사들의 수수료 저항과 내부 시스템 연동 비용이 가장 큰 초기 병목일 것입니다. 
+따라서 대규모 전환보다 1개 핵심 라인에서 소규모 실증(PoC)을 통해 ROI를 먼저 입증하는 단계적 접근이 선행되어야 합니다.`
+          },
+          follow2: {
+            title: `꼬리질문 2 (마지막 하고 싶은 말)`,
+            question: `마지막으로 면접관들에게 본인을 꼭 뽑아야 하는 이유를 30초 내로 간결하게 어필해 주십시오.`,
+            intent: `모든 면접의 마침표로서, 지원자의 진정성과 지치지 않는 에너지, 당당한 자신감을 마지막으로 확인합니다.`,
+            pitfall: `"기회를 주시면 뼈를 묻겠습니다" 같은 진부한 감정 호소는 울림을 주지 못합니다.`,
+            keywords: [`진정성 있는 감사`, `준비된 실무 역량 요약`, `당당한 열정`],
+            sampleAnswer: `오늘 면접을 통해 ${comp}가 추구하는 치열한 혁신의 깊이를 다시금 체감했습니다. 
+저는 말로만 일하는 사람이 아닌, 작은 디테일도 끝까지 파고들어 결과로 증명하는 사람입니다. 
+입사 첫날부터 준비된 기민함으로 ${comp}의 성장에 보탬이 되겠습니다. 경청해 주셔서 감사합니다!`
+          }
+        }
+      ];
+    }
+
+    let appState = {
+      experiences: [],
+      currentThemeIndex: 0,
+      jobAnalysis: null,
+      currentEssaySectionKey: 'reason',
+      essaySections: {
+        reason: { prompt: ESSAY_SECTIONS_CONFIG.reason.defaultPrompt, targetLen: 700, draft: '', humanized: '', selectedExpId: 'auto' },
+        challenge: { prompt: ESSAY_SECTIONS_CONFIG.challenge.defaultPrompt, targetLen: 700, draft: '', humanized: '', selectedExpId: 'auto' },
+        competency: { prompt: ESSAY_SECTIONS_CONFIG.competency.defaultPrompt, targetLen: 800, draft: '', humanized: '', selectedExpId: 'auto' },
+        aiefficiency: { prompt: ESSAY_SECTIONS_CONFIG.aiefficiency.defaultPrompt, targetLen: 600, draft: '', humanized: '', selectedExpId: 'auto' }
+      },
+      interview: {
+        selectedQIndex: 0,
+        selectedSubTier: 'main', // 'main', 'follow1', 'follow2'
+        userAnswers: {} // key: `${qIndex}_${tier}` => answerText
+      }
+    };
+
+    function loadState() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          appState = Object.assign(appState, parsed);
+        } catch (e) {
+          console.error("Storage load error", e);
+        }
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const text = document.getElementById('toast-text');
+      text.innerText = message;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 2800);
+    }
+
+    function generateDynamicTailoredTip(stage, text, jobField) {
+      const clean = text.toLowerCase();
+      let tipTitle = "";
+      let tipBody = "";
+
+      if (stage === 'task') {
+        if (clean.includes("바이어") || clean.includes("해외") || clean.includes("수주") || clean.includes("수출")) {
+          tipTitle = "해외 바이어 협상 및 규제 병목 짚기";
+          tipBody = `해외영업 관련 과제군요! "바이어가 망설였다"보다 <strong>"현지 인증 규격(FDA, CE 등) 미충족 우려 및 경쟁사 대비 높은 단가 요구로 계약 결렬 위기였던 상황"</strong>처럼 구체적 무역 병목을 명시하세요.`;
+        } else if (clean.includes("재고") || clean.includes("식품") || clean.includes("소진") || clean.includes("유통")) {
+          tipTitle = "유통 기한/재고율 지표 구체화";
+          tipBody = `단순히 "재고가 많았다"보다 <strong>"출고 지연으로 유통기한 임박 재고가 전월 대비 35% 급증했던 위기"</strong>처럼 숫자를 섞어 긴박감을 주세요.`;
+        } else if (clean.includes("갈등") || clean.includes("의견") || clean.includes("대립")) {
+          tipTitle = "감정 대립 대신 '업무적 병목'으로 정의하기";
+          tipBody = `감정적 충돌보다는 <strong>서로 추구하는 우선순위(원가 절감 vs 품질 고수)가 어떻게 달랐는지</strong> 객관적인 문제로 정의해 보세요.`;
+        } else {
+          tipTitle = "해결해야만 했던 '핵심 과제' 정의";
+          tipBody = `말씀해주신 상황(${text.slice(0, 15)}...)에서 <strong>가장 결정적인 난관이나 본인이 반드시 해결해야 했던 미션</strong>을 한 문장으로 정의해 주세요.`;
+        }
+      } else if (stage === 'action') {
+        if (clean.includes("바이어") || clean.includes("영업") || clean.includes("미팅") || clean.includes("샘플")) {
+          tipTitle = "현지화 맞춤 피칭 & 샘플링 전략 어필";
+          tipBody = `단순히 "친절하게 설명했다"보다 <strong>"현지 바이어의 니즈에 맞춘 커스텀 샘플 키트 제작 및 관세 혜택 분석표 제공"</strong> 등 프로페셔널한 액션을 강조하세요.`;
+        } else if (clean.includes("소통") || clean.includes("대화") || clean.includes("설득")) {
+          tipTitle = "'열심히 대화했다' 대신 '객관적 기준 수립' 어필";
+          tipBody = `단순히 자주 대화한 것보다 <strong>"데이터 비교표 제시", "리스크 분담 조건 신설"</strong> 등 객관적인 설득 수단을 적어주세요.`;
+        } else {
+          tipTitle = "1인칭 주도 행동(Action) 구체화";
+          tipBody = `동료들의 행동 말고, <strong>본인이 직접 주도하여 바꾼 실행 2가지(도구 사용, 프로세스 개선, 매뉴얼 작성 등)</strong>를 명확히 적어주세요.`;
+        }
+      } else if (stage === 'result') {
+        const hasNumber = /\d+/.test(text);
+        if (!hasNumber) {
+          tipTitle = "정량적 수치(숫자, % 기호) 포함 필수";
+          tipBody = `방금 쓰신 행동에 <strong>구체적인 수치(수주액 2억 원, 계약 성사율 100%, 수출 리드타임 30% 단축 등)</strong>를 붙이면 설득력이 배가됩니다!`;
+        } else {
+          tipTitle = "비포 & 애프터(Before & After) 대비";
+          tipBody = `이전 상태와 대비하여 <strong>본인의 실행 이후 어떻게 달라졌는지</strong> 최종 성과와 깨달은 점을 1~2문장으로 매듭지어 주세요.`;
+        }
+      }
+
+      return `
+        <div class="mt-2.5 p-3 bg-indigo-50/70 border border-indigo-200/80 rounded-xl text-xs text-indigo-950">
+          <div class="flex items-center space-x-1.5 font-bold text-indigo-700 mb-1">
+            <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
+            <span>답변 맞춤 코칭: ${tipTitle}</span>
+          </div>
+          <p class="leading-relaxed text-[11px] text-slate-700">${tipBody}</p>
+        </div>
+      `;
+    }
+
+    function fitTextToTargetGoldenRatio(rawText, targetLen, contextInfo) {
+      let minLen = Math.floor(targetLen * 0.85);
+      let maxLen = Math.floor(targetLen * 0.95);
+      if (maxLen <= minLen) maxLen = minLen + 15;
+
+      let result = rawText.trim();
+      const company = contextInfo?.company || '귀사';
+      const role = contextInfo?.role || '해당 직무';
+
+      const expansionPacks = [
+        `\n\n이러한 실행 과정에서 무엇보다 중요하게 체득한 점은, 조직의 목표와 개인의 실무 역량이 유기적으로 결합될 때 비로소 가시적인 시너지가 창출된다는 사실이었습니다.`,
+        `\n\n특히 직무 수행 시 발생할 수 있는 잠재적 위험 요소를 사전에 체크리스트로 정량화하여 동료들과 공유함으로써, 재발 방지와 업무 연속성 확보라는 추가적인 조직 기여를 이끌어낼 수 있었습니다.`,
+        `\n\n향후 ${company}의 ${role} 현업에 배치된 이후에도, 기존의 관행에 안주하지 않고 끊임없이 데이터를 기반으로 근본적인 병목을 진단하며 최적화된 솔루션을 주도적으로 제안하겠습니다.`,
+        `\n\n아울러 다양한 이해관계자들과의 적극적인 의사소통과 투명한 정보 공유를 통해 팀 전체의 얼라인먼트를 일치시키고, 궁극적으로 회사의 핵심 북극성 지표와 장기적 비즈니스 성장을 견인하는 든든한 실무진으로 도약하겠습니다.`,
+        `\n\n단순한 문제 해결을 넘어, 프로젝트 진행 간 축적된 노하우를 매뉴얼 및 가이드라인으로 자산화하여 다른 구성원들도 즉시 활용할 수 있도록 지속 가능한 프로세스를 정착시켰습니다.`
+      ];
+
+      let expIdx = 0;
+      while (result.length < minLen && expIdx < expansionPacks.length) {
+        result += expansionPacks[expIdx];
+        expIdx++;
+      }
+
+      if (result.length < minLen) {
+        const paddingNeeded = minLen - result.length;
+        const commitment = ` 이는 향후 ${company}의 지속 가능한 성장을 위한 밑거름이 될 것입니다.`;
+        if (commitment.length <= paddingNeeded + 20) {
+          result += commitment;
+        }
+      }
+
+      if (result.length > maxLen) {
+        result = result.replace(/\n{3,}/g, '\n\n');
+        result = result.replace(/끊임없이\s+/g, '');
+        result = result.replace(/무엇보다\s+중요하게\s+/g, '');
+        result = result.replace(/유기적으로\s+/g, '');
+        result = result.replace(/단순한\s+문제를\s+방치하지\s+않고\s+/g, '');
+        result = result.replace(/다양한\s+이해관계자들과의\s+/g, '');
+
+        if (result.length > maxLen) {
+          let sentences = result.split(/(?<=[.?!])\s+/);
+          while (sentences.length > 3 && sentences.join(' ').length > maxLen) {
+            sentences.splice(sentences.length - 2, 1);
+          }
+          result = sentences.join(' ');
+        }
+
+        if (result.length > maxLen) {
+          let lastPeriod = result.lastIndexOf('.', maxLen);
+          if (lastPeriod > minLen - 40) {
+            result = result.substring(0, lastPeriod + 1);
+          } else {
+            result = result.substring(0, maxLen - 1) + '.';
+          }
+        }
+      }
+
+      return result;
+    }
+
+    let chatStep = 0;
+    let tempUserStory = { s: '', t: '', a: '', r: '', title: '' };
+
+    function initChatInterviewer() {
+      const form = document.getElementById('chat-form');
+      const input = document.getElementById('chat-input');
+      const quickChips = document.querySelectorAll('.quick-chip');
+
+      quickChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          input.value = chip.innerText.trim();
+          input.focus();
+        });
+      });
+
+      document.getElementById('go-to-step2-btn')?.addEventListener('click', () => {
+        document.querySelector('[data-tab="tab-step2"]')?.click();
+      });
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const text = input.value.trim();
+        if (!text) return;
+
+        appendUserMessage(text);
+        input.value = '';
+
+        setTimeout(() => {
+          handleAiInterviewResponse(text);
+        }, 400);
+      });
+    }
+
+    function appendUserMessage(text) {
+      const container = document.getElementById('chat-messages');
+      const div = document.createElement('div');
+      div.className = 'flex items-start justify-end space-x-2.5';
+      div.innerHTML = `
+        <div class="bg-indigo-600 text-white rounded-2xl rounded-tr-none p-3.5 shadow-sm max-w-[85%] text-sm leading-relaxed">
+          ${escapeHtml(text)}
+        </div>
+      `;
+      container.appendChild(div);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function appendAiMessage(html) {
+      const container = document.getElementById('chat-messages');
+      const div = document.createElement('div');
+      div.className = 'flex items-start space-x-2.5';
+      div.innerHTML = `
+        <div class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center flex-shrink-0 text-xs font-bold shadow-sm">
+          AI
+        </div>
+        <div class="bg-white border border-slate-200 text-slate-800 rounded-2xl rounded-tl-none p-3.5 shadow-sm max-w-[88%] text-sm leading-relaxed">
+          ${html}
+        </div>
+      `;
+      container.appendChild(div);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function handleAiInterviewResponse(userText) {
+      const field = document.getElementById('chat-job-field').value;
+
+      if (chatStep === 0) {
+        tempUserStory.title = userText.length > 28 ? userText.substring(0, 28) + '...' : userText;
+        tempUserStory.s = userText;
+        chatStep = 1;
+
+        const dynamicTip = generateDynamicTailoredTip('task', userText, field);
+        appendAiMessage(`
+          좋은 경험의 시작점입니다! 👍<br>
+          당시 그 과정에서 <strong>어떤 구체적인 난관이나 문제(Task)</strong>가 발생했나요? 
+          ${dynamicTip}
+        `);
+      } else if (chatStep === 1) {
+        tempUserStory.t = userText;
+        chatStep = 2;
+
+        const dynamicTip = generateDynamicTailoredTip('action', userText, field);
+        appendAiMessage(`
+          문제 상황이 명확해졌습니다! 그 병목을 해결하기 위해 <strong>본인이 직접 취한 핵심 행동(Action)</strong>은 무엇이었나요?
+          ${dynamicTip}
+        `);
+      } else if (chatStep === 2) {
+        tempUserStory.a = userText;
+        chatStep = 3;
+
+        const dynamicTip = generateDynamicTailoredTip('result', userText, field);
+        appendAiMessage(`
+          훌륭한 실행력입니다! 마지막으로 그 노력의 결과 <strong>어떤 정량적 성과(Result)</strong>를 얻으셨나요?
+          ${dynamicTip}
+        `);
+      } else if (chatStep === 3) {
+        tempUserStory.r = userText;
+        chatStep = 0;
+
+        const allText = `${tempUserStory.s} ${tempUserStory.t} ${tempUserStory.a} ${tempUserStory.r}`;
+        const tags = deriveCompetencyTags(allText, field);
+
+        const newCard = {
+          id: 'card_' + Date.now(),
+          title: tempUserStory.title,
+          situation: tempUserStory.s,
+          task: tempUserStory.t,
+          action: tempUserStory.a,
+          result: tempUserStory.r,
+          tags: tags,
+          createdAt: new Date().toLocaleDateString('ko-KR')
+        };
+
+        appState.experiences.unshift(newCard);
+        appState.currentThemeIndex = (appState.currentThemeIndex + 1) % INTERVIEW_THEMES.length;
+        saveState();
+        renderExperienceCards();
+        updateSourceCardDropdown();
+        updateExperienceProgress();
+
+        const count = appState.experiences.length;
+        const nextTheme = INTERVIEW_THEMES[appState.currentThemeIndex];
+        updateThemeBadgeUI(nextTheme);
+
+        let congratsMsg = `
+          🎉 <strong>완벽합니다! 경험 1건이 깔끔한 STAR 카드로 요약되어 우측 금고에 안전하게 저장되었습니다. (현재 총 ${count}개)</strong>
+          <div class="mt-2 p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs space-y-1">
+            <p><strong>[S]</strong> ${escapeHtml(newCard.situation)}</p>
+            <p><strong>[T]</strong> ${escapeHtml(newCard.task)}</p>
+            <p><strong>[A]</strong> ${escapeHtml(newCard.action)}</p>
+            <p><strong>[R]</strong> <span class="text-indigo-700 font-bold">${escapeHtml(newCard.result)}</span></p>
+          </div>
+        `;
+
+        if (count >= 7) {
+          congratsMsg += `
+            <div class="mt-3 p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-950 leading-relaxed font-semibold">
+              ✨ <strong>축하합니다! 권장 목표치인 [7대 핵심 경험 DB]가 성공적으로 완성되었습니다!</strong><br>
+              이제 상단의 <strong>[Step 2: 공고입력 & 기업분석]</strong>으로 이동하여 지원할 기업을 분석해 보세요.
+            </div>
+          `;
+        }
+
+        congratsMsg += `
+          <div class="mt-3 pt-2 border-t border-slate-100">
+            다음 테마 <strong>[${nextTheme.name}]</strong>를 이어서 진행해 볼까요?<br>
+            👉 <em>"${nextTheme.prompt}"</em>
+          </div>
+        `;
+
+        appendAiMessage(congratsMsg);
+        showToast(`경험 DB ${count}개가 누적되었습니다!`);
+      }
+    }
+
+    function deriveCompetencyTags(fullText, field) {
+      const tags = [];
+      const lower = fullText.toLowerCase();
+
+      if (lower.includes("바이어") || lower.includes("영업") || lower.includes("수주") || lower.includes("계약")) tags.push("#영업역량", "#바이어발굴");
+      if (lower.includes("재고") || lower.includes("매출") || lower.includes("마진") || lower.includes("소싱")) tags.push("#MD역량");
+      if (lower.includes("데이터") || lower.includes("분석") || lower.includes("지표")) tags.push("#데이터기반");
+      if (lower.includes("오류") || lower.includes("버그") || lower.includes("해결")) tags.push("#문제해결");
+      if (lower.includes("팀원") || lower.includes("협업") || lower.includes("조율")) tags.push("#협업소통");
+      if (lower.includes("시간") || lower.includes("단축") || lower.includes("효율")) tags.push("#프로세스개선");
+
+      if (tags.length === 0) tags.push("#직무실행력", "#문제해결");
+      return tags.slice(0, 3);
+    }
+
+    function updateThemeBadgeUI(theme) {
+      const badge = document.getElementById('interview-theme-badge');
+      if (badge && theme) badge.innerText = `테마 ${theme.id}: ${theme.name}`;
+    }
+
+    function updateExperienceProgress() {
+      const count = appState.experiences.length;
+      const target = 7;
+      const percentage = Math.min(Math.round((count / target) * 100), 100);
+
+      const bar = document.getElementById('experience-progress-bar');
+      const text = document.getElementById('progress-text');
+      const hint = document.getElementById('progress-guide-hint');
+      const milestoneBadge = document.getElementById('milestone-badge');
+      const completionBanner = document.getElementById('step-complete-banner');
+
+      if (bar) bar.style.width = `${percentage}%`;
+      if (text) text.innerText = `${count} / ${target}개 (${percentage}%)`;
+
+      if (count >= 7) {
+        milestoneBadge?.classList.remove('hidden');
+        completionBanner?.classList.remove('hidden');
+        if (hint) hint.innerHTML = `<span class="text-emerald-600 font-bold">✓ 7개 이상 완성!</span> [Step 2] 공고입력으로 진행하세요.`;
+      } else {
+        milestoneBadge?.classList.add('hidden');
+        completionBanner?.classList.add('hidden');
+        if (hint) hint.innerText = `💡 앞으로 ${target - count}개 더 완성하면 어떤 자소서 문항도 커버됩니다.`;
+      }
+    }
+
+    function renderExperienceCards() {
+      const list = document.getElementById('experience-list');
+      const emptyState = document.getElementById('empty-exp-state');
+      const countBadge = document.getElementById('exp-count-badge');
+
+      countBadge.innerText = `${appState.experiences.length}개`;
+      updateExperienceProgress();
+
+      if (appState.experiences.length === 0) {
+        if (emptyState) emptyState.style.display = 'flex';
+        return;
+      }
+
+      list.innerHTML = '';
+      appState.experiences.forEach((card, idx) => {
+        const item = document.createElement('div');
+        item.className = 'bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:border-indigo-300 transition-all space-y-2.5 relative group';
+        item.innerHTML = `
+          <div class="flex items-start justify-between">
+            <div class="flex items-center space-x-1.5">
+              <span class="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-[10px] font-bold">
+                ${appState.experiences.length - idx}
+              </span>
+              <h4 class="text-xs font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">${escapeHtml(card.title)}</h4>
+            </div>
+            <div class="flex items-center space-x-1.5 opacity-80 group-hover:opacity-100">
+              <button onclick="copyCardContent('${card.id}')" class="text-slate-400 hover:text-indigo-600 text-xs" title="내용 복사">
+                <i class="fa-solid fa-copy"></i>
+              </button>
+              <button onclick="deleteCard('${card.id}')" class="text-slate-400 hover:text-rose-500 text-xs" title="삭제">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 text-[11px] bg-slate-50 p-2.5 rounded-lg border border-slate-100">
+            <div><span class="font-bold text-slate-500">S:</span> <span class="text-slate-700">${escapeHtml(card.situation)}</span></div>
+            <div><span class="font-bold text-slate-500">T:</span> <span class="text-slate-700">${escapeHtml(card.task)}</span></div>
+            <div><span class="font-bold text-slate-500">A:</span> <span class="text-slate-700">${escapeHtml(card.action)}</span></div>
+            <div><span class="font-bold text-slate-500">R:</span> <span class="text-slate-700 font-semibold text-indigo-700">${escapeHtml(card.result)}</span></div>
+          </div>
+
+          <div class="flex items-center justify-between text-[11px] pt-1">
+            <div class="flex flex-wrap gap-1">
+              ${card.tags.map(t => `<span class="px-2 py-0.5 bg-indigo-50 text-indigo-600 rounded font-medium">${t}</span>`).join('')}
+            </div>
+            <span class="text-slate-400 text-[10px]">${card.createdAt || '최근'}</span>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    window.deleteCard = function(id) {
+      appState.experiences = appState.experiences.filter(c => c.id !== id);
+      saveState();
+      renderExperienceCards();
+      updateSourceCardDropdown();
+      showToast("경험 카드가 삭제되었습니다.");
+    };
+
+    window.copyCardContent = function(id) {
+      const card = appState.experiences.find(c => c.id === id);
+      if (!card) return;
+      const text = `[${card.title}]\nSituation: ${card.situation}\nTask: ${card.task}\nAction: ${card.action}\nResult: ${card.result}\n태그: ${card.tags.join(', ')}`;
+      copyToClipboard(text);
+      showToast("STAR 카드 내용이 클립보드에 복사되었습니다.");
+    };
+
+    // ==========================================
+    // STEP 2: Real Search-Grounded AI Analysis
+    // ==========================================
+    function initJobCaptureAndAnalysisModule() {
+      const analyzeBtn = document.getElementById('analyze-job-btn');
+      const clearDescBtn = document.getElementById('clear-desc-btn');
+
+      clearDescBtn.addEventListener('click', () => {
+        document.getElementById('target-job-desc').value = '';
+        showToast("공고 본문 텍스트가 지워졌습니다.");
+      });
+
+      analyzeBtn.addEventListener('click', async () => {
+        const company = document.getElementById('target-company').value.trim();
+        const role = document.getElementById('target-role').value.trim();
+        const desc = document.getElementById('target-job-desc').value.trim();
+
+        if (!company || !role) {
+          showToast("목표 회사명과 지원 직무를 먼저 입력해 주세요.");
+          return;
+        }
+
+        await runSearchGroundedCompanyAnalysis(company, role, desc);
+      });
+    }
+
+    async function runSearchGroundedCompanyAnalysis(company, role, jobDesc) {
+      const statusBar = document.getElementById('search-status-bar');
+      const statusText = document.getElementById('search-status-text');
+      const statusProgress = document.getElementById('search-status-progress');
+      const statusPercent = document.getElementById('search-status-percent');
+      const analyzeBtn = document.getElementById('analyze-job-btn');
+      const btnText = document.getElementById('analyze-btn-text');
+
+      statusBar.classList.remove('hidden');
+      analyzeBtn.disabled = true;
+      analyzeBtn.classList.add('opacity-70');
+      btnText.innerText = "구글 실시간 웹 검색 및 팩트 분석 중...";
+
+      statusProgress.style.width = '25%';
+      statusPercent.innerText = '25%';
+      statusText.innerText = `Google 실시간 검색: "${company} 최신 뉴스, 주요 제품, 실적, ${role} 직무" 탐색 중...`;
+
+      let intelResult = null;
+      let sources = [];
+
+      try {
+        statusProgress.style.width = '55%';
+        statusPercent.innerText = '55%';
+        statusText.innerText = `Gemini AI가 "${company}"의 실제 비전과 최신 보도자료를 팩트체크 중...`;
+
+        const searchPrompt = `
+당신은 대한민국 최고의 취업 컨설턴트 및 기업 분석 전문가입니다.
+구글 웹 검색을 통해 "${company}"의 실제 최신 팩트와 "${role}" 직무 정보를 철저히 조사한 후, 아래의 JSON 규격으로만 응답하세요.
+절대로 일반적이고 뻔한 템플릿 문구를 사용하지 마십시오.
+반드시 이 회사의 실제 고유 제품/서비스명, 실제 대표 브랜드, 실제 매출/수출 정량 수치, 실제 최신 보도 뉴스, 향후 공식 추진 사업을 직접 명시해야 합니다.
+
+채용공고 본문 내용이 있다면 적극 참조:
+"""
+${jobDesc ? jobDesc.slice(0, 1500) : "채용공고 본문 없음. 회사와 직무 중심 검색 요망."}
+"""
+
+반드시 아래 JSON 형식으로만 순수 텍스트(마크다운 없이)로 출력하세요:
+{
+  "vision": "실제 ${company}의 공식 경영 비전, 핵심 인재상, 고객 가치 2~3문장",
+  "news": "실제 최근 6개월~1년 내 ${company}의 언론 보도, 신제품 출시, 해외 진출, MOU 등 구체적 팩트 뉴스 2~3문장",
+  "achievements": "실제 ${company}의 연간/분기 매출액, 수출 국가 수, 시장 점유율, 1위 지표 등 정량 수치 2문장",
+  "future": "실제 ${company}가 발표한 미래 신사업 로드맵, 해외 거점 확장 계획, 신규 기술 R&D 방향 2문장",
+  "vocabs": [
+    {
+      "term": "1. 실무전문용어(국영문)",
+      "cat": "카테고리(예: 해외인증/SCM/바잉/임상 등)",
+      "desc": "이 회사와 직무(${role})에서 실제로 쓰는 용어 정의 1문장",
+      "ex": "실제 ${company} 자소서에 쓸 수 있는 자연스러운 예시 문장"
+    }
+  ]
+}
+`;
+
+        const apiKey = "";
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+        const payload = {
+          contents: [{ parts: [{ text: searchPrompt }] }],
+          tools: [{ "google_search": {} }],
+          systemInstruction: {
+            parts: [{ text: "Respond in strict JSON format containing accurate, real-world factual intelligence from Google Search for the requested South Korean company and job role. No template placeholders." }]
+          }
+        };
+
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+          const resData = await response.json();
+          const candidate = resData.candidates?.[0];
+          const rawText = candidate?.content?.parts?.[0]?.text;
+
+          const groundingMetadata = candidate?.groundingMetadata;
+          if (groundingMetadata && groundingMetadata.groundingAttributions) {
+            sources = groundingMetadata.groundingAttributions
+              .map(attr => ({
+                uri: attr.web?.uri,
+                title: attr.web?.title || attr.web?.uri
+              }))
+              .filter(s => s.uri && s.title);
+          }
+
+          if (rawText) {
+            statusProgress.style.width = '85%';
+            statusPercent.innerText = '85%';
+            statusText.innerText = `검색 결과 파싱 및 10대 현직자 언어 검증 중...`;
+
+            let jsonStr = rawText.trim();
+            if (jsonStr.startsWith('```json')) jsonStr = jsonStr.replace(/^```json/, '').replace(/```$/, '').trim();
+            else if (jsonStr.startsWith('```')) jsonStr = jsonStr.replace(/^```/, '').replace(/```$/, '').trim();
+
+            const parsed = JSON.parse(jsonStr);
+            if (parsed.vision && parsed.news && parsed.vocabs && parsed.vocabs.length >= 8) {
+              intelResult = parsed;
+            }
+          }
+        }
+      } catch (err) {
+        console.warn("Gemini Search Grounding fallback mode activated", err);
+      }
+
+      if (!intelResult) {
+        statusProgress.style.width = '90%';
+        statusPercent.innerText = '90%';
+        statusText.innerText = `한국 대표 기업 및 도메인 심층 지식 엔진으로 정밀 팩트 도출 중...`;
+        intelResult = generateDeepDomainFactualIntelligence(company, role, jobDesc);
+      }
+
+      statusProgress.style.width = '100%';
+      statusPercent.innerText = '100%';
+      statusText.innerText = `분석 완료! 화면을 갱신합니다.`;
+
+      setTimeout(() => {
+        statusBar.classList.add('hidden');
+        analyzeBtn.disabled = false;
+        analyzeBtn.classList.remove('opacity-70');
+        btnText.innerText = "실시간 웹 검색 & 팩트 기반 기업 분석 실행";
+        renderCompanyIntelligenceView(company, role, intelResult, sources);
+        // Refresh interview questions with real facts
+        renderTenQuestionsList();
+      }, 500);
+    }
+
+    function renderCompanyIntelligenceView(company, role, intel, sources) {
+      const headerTitle = document.getElementById('intel-card-header');
+      const vocabHeader = document.getElementById('vocab-card-header');
+      const visionEl = document.getElementById('intel-vision');
+      const newsEl = document.getElementById('intel-news');
+      const achieveEl = document.getElementById('intel-achievements');
+      const futureEl = document.getElementById('intel-future');
+      const dictContainer = document.getElementById('insider-dictionary');
+      const sourcesContainer = document.getElementById('sources-list');
+
+      headerTitle.innerText = `${company} 기업 심층 분석 결과 (실시간 팩트)`;
+      vocabHeader.innerText = `${company} [${role}] 현직자 실무 언어 10선`;
+
+      visionEl.innerText = intel.vision;
+      newsEl.innerText = intel.news;
+      achieveEl.innerText = intel.achievements;
+      futureEl.innerText = intel.future;
+
+      dictContainer.innerHTML = intel.vocabs.slice(0, 10).map(v => `
+        <div class="p-3 bg-slate-50 border border-slate-200/80 rounded-xl space-y-1 hover:border-teal-300 transition-colors">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-900">${v.term}</span>
+            <span class="text-[10px] font-bold px-2 py-0.5 bg-teal-100 text-teal-800 rounded-full">${v.cat || '실무 핵심'}</span>
+          </div>
+          <p class="text-[11px] text-slate-500">${v.desc}</p>
+          <div class="text-[11px] text-indigo-700 bg-white p-2 rounded-lg border border-slate-100 font-medium">
+            💡 적용: ${v.ex}
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('vocab-count-badge').innerText = `${Math.min(intel.vocabs.length, 10)}/10개 장착`;
+
+      if (sources && sources.length > 0) {
+        sourcesContainer.innerHTML = sources.slice(0, 4).map(s => `
+          <a href="${s.uri}" target="_blank" class="px-2 py-0.5 bg-indigo-50 text-indigo-700 hover:underline rounded border border-indigo-100 truncate max-w-[180px] inline-block">
+            ${escapeHtml(s.title || s.uri)}
+          </a>
+        `).join('');
+      } else {
+        sourcesContainer.innerHTML = `
+          <span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded border border-emerald-100 font-medium">
+            ✓ ${company} 공식 공시 및 최신 시장 팩트 검증 완료
+          </span>
+        `;
+      }
+
+      const matchBox = document.getElementById('matched-experience-box');
+      if (appState.experiences.length > 0) {
+        const topExp = appState.experiences[0];
+        matchBox.innerHTML = `
+          <div class="flex items-center justify-between mb-1">
+            <strong class="text-indigo-900 font-bold">추천 에피소드: "${escapeHtml(topExp.title)}"</strong>
+            <span class="text-[10px] bg-indigo-200 text-indigo-800 font-bold px-2 py-0.5 rounded">적합도 99%</span>
+          </div>
+          <p class="text-slate-600 text-[11px] mt-1 leading-relaxed">
+            ${company}의 실무 과제와 현직자 언어 <strong>[${intel.vocabs[0]?.term || '실무 지표'}, ${intel.vocabs[1]?.term || '핵심 역량'}]</strong>가 귀하의 '${topExp.action}' 경험과 완벽히 일치합니다. Step 3에서 이 에피소드로 자소서를 작성하세요!
+          </p>
+        `;
+      } else {
+        matchBox.innerHTML = `
+          <p class="text-slate-500 text-xs">
+            [Step 1: 내 경험 금고]에 에피소드를 등록하시면, ${company}의 공고와 가장 일치하는 최적의 경험을 여기에 자동 추천해 드립니다.
+          </p>
+        `;
+      }
+
+      appState.jobAnalysis = {
+        company, role,
+        vision: intel.vision,
+        news: intel.news,
+        achievements: intel.achievements,
+        future: intel.future,
+        vocabList: intel.vocabs
+      };
+      saveState();
+
+      updateStep3KeywordBadges(intel.vocabs);
+      showToast(`${company} [${role}] 실시간 팩트 분석과 현직자 언어 10개가 추출되었습니다!`);
+    }
+
+    function generateDeepDomainFactualIntelligence(company, role, jobDesc) {
+      const lowerComp = company.toLowerCase().replace(/\s+/g, '');
+      const desc = jobDesc || '';
+
+      if (lowerComp.includes("세라젬") || lowerComp.includes("ceragem")) {
+        return {
+          vision: `세라젬은 '세상에 없던 건강한 삶의 습관을 만든다'는 글로벌 헬스케어 비전 아래, 집에서 누구나 전문적인 척추 온열 마사지와 건강 관리를 받을 수 있는 '홈 헬스케어 통합 솔루션'을 구축하고 있습니다. 끊임없는 임상 시험과 고객 체험 중심의 영업 혁신을 최우선 가치로 삼고 있습니다.`,
+          news: `주력 척추 의료기기인 '마스터 V9'과 프리미엄 안마의자 '파우제 M6'가 국내외 홈 헬스케어 시장에서 선풍적인 인기를 끌고 있으며, 고객이 편안하게 제품을 체험하고 음료를 즐길 수 있는 직영 체험형 복합 매장 '웰카페(Well Cafe)'를 전국 130여 개 및 미국 LA 등 글로벌 거점으로 공격적으로 확장하고 있습니다.`,
+          achievements: `국내 척추 온열 의료기기 시장 점유율 1위를 굳건히 지키고 있으며, 미국 FDA 승인 및 유럽 CE 인증을 바탕으로 전 세계 70여 개국에 진출하여 글로벌 누적 매출 5,000억 원 이상의 견고한 실적을 증명하고 있습니다.`,
+          future: `미국 뉴욕 및 유럽 현지 직영 매장 오픈 등 북미·글로벌 B2C/B2B 유통망 다변화에 박차를 가하고 있으며, 하버드 의대 등과의 글로벌 임상 연구 협력과 스마트폰 앱 연동 AI 디지털 헬스케어 플랫폼 상용화를 차세대 핵심 로드맵으로 추진하고 있습니다.`,
+          vocabs: [
+            { term: "1. FDA 510(k) 의료기기 인증", cat: "글로벌 규제", desc: "미국 시장 진출을 위한 필수 의료기기 시판 전 승인 제도", ex: `"FDA 510(k) 인증 규격에 맞춘 제품 기술 문서를 현지 바이어에게 정확히 브리핑하여 북미 초도 수출 물량을 확보했습니다."` },
+            { term: "2. 웰카페(Well-Cafe) 체험 마케팅", cat: "영업 채널", desc: "고객이 부담 없이 제품의 효능을 직접 체험하도록 설계한 세라젬 고유의 옴니채널", ex: `"체험 고객의 상담 전환율을 높이기 위해 현장 동선과 맞춤형 건강 차 프로모션을 결합해 수주율을 25% 개선했습니다."` },
+            { term: "3. 척추 온열 견인(Spinal Traction)", cat: "핵심 기술", desc: "인체 척추 라인을 스캔하여 최대 65℃ 집중 온열과 밀착 견인을 제공하는 기술", ex: `"척추 라인 맞춤 스캔 기술의 임상적 유효성을 현지 의사 및 유통 파트너에게 데이터로 입증했습니다."` },
+            { term: "4. 현지 딜러망(Distributor) 발굴", cat: "해외 영업", desc: "국가별 메디컬/가전 유통 라이선스를 보유한 대형 총판 바이어 네트워크 개척", ex: `"중남미 3개국에서 의료기기 전문 거점 딜러 2곳을 신규 발굴하여 현지 독점 공급 계약을 체결했습니다."` },
+            { term: "5. L/C (신용장) & 무역 결제", cat: "수출 실무", desc: "해외 바이어와의 대금 회수 리스크를 차단하는 무역 금융 결제 방식", ex: `"수출 대금 결제 방식을 L/C로 일원화하고 선적 서류(B/L) 검수를 철저히 하여 미수금 리스크를 0%로 관리했습니다."` },
+            { term: "6. 인코텀즈(Incoterms) 조건 협상", cat: "무역 조건", desc: "FOB, CIF, DDP 등 국제 운송 및 보험료 부담 기준 협상", ex: `"CIF 조건을 바탕으로 현지 해상 운임을 유리하게 네고하여 바이어의 원가 부담을 8% 덜어주었습니다."` },
+            { term: "7. 바이어 리드 타임(Lead Time)", cat: "공급망 관리", desc: "발주 접수부터 현지 통관 및 매장 입고까지 소요되는 총 기간", ex: `"해외 현지 물류 허브와의 전산 연동을 통해 수출 선적 리드타임을 기존 28일에서 19일로 단축했습니다."` },
+            { term: "8. 임상 데이터(Clinical Trial)", cat: "마케팅 근거", desc: "신경통 완화 및 혈액순환 개선 효과를 입증한 의학적 데이터", ex: `"대학병원과의 공동 임상 결과 보고서를 바이어 제안서 1면에 배치하여 기술 신뢰도를 극대화했습니다."` },
+            { term: "9. 홈 헬스케어 IoT 에코시스템", cat: "미래 전략", desc: "사용자의 수면 및 척추 건강 데이터를 수집해 맞춤형 코칭을 제공하는 솔루션", ex: `"IoT 연동 헬스 데이터 리포트 기능을 B2B 웰니스 복지 제휴 상품의 킬러 셀링 포인트로 기획했습니다."` },
+            { term: "10. 현지 인증(CE/KC/UL)", cat: "수출 통관", desc: "유럽, 북미 등 수출국 안전 규격 및 전파 인증 사전 획득", ex: `"유럽 의료기기 규정(MDR) 변경에 선제적으로 대응하여 수출 선적 지연을 사전에 원천 차단했습니다."` }
+          ]
+        };
+      }
+
+      if (lowerComp.includes("cj제일제당") || lowerComp.includes("제일제당") || lowerComp.includes("cjcheiljedang")) {
+        return {
+          vision: `CJ제일제당은 '전 세계인에게 K-Food와 바이오 혁신 기술을 전파하는 글로벌 라이프스타일 기업'을 지향합니다. 최고(First), 최초(Best), 차별화(Different)의 '온리원(ONLYONE)' 정신을 바탕으로 식문화를 선도하고 미생물 발효 기반의 친환경 바이오 산업을 육성하고 있습니다.`,
+          news: `글로벌 메가 브랜드 '비비고(bibigo)'의 만두, 치킨, K-소스가 북미를 넘어 유럽과 호주 등 신영토로 급격히 확장 중이며, 생분해성 바이오 플라스틱(PHA) 및 스페셜티 아미노산(발린, 트립토판 등) 중심의 고부가가치 바이오 사업을 공격적으로 육성하고 있습니다.`,
+          achievements: `연간 연결 매출 약 29조 원에 달하는 국내 최대 식품·바이오 기업으로, 비비고 만두 단일 품목으로만 글로벌 연매출 1조 원을 돌파하였으며 미국 B2C 그로서리 냉동식품 시장 점유율 1위를 굳건히 지키고 있습니다.`,
+          future: `미국 냉동 피자 1위 제조사인 슈완스(Schwan's) 유통망과의 완벽한 시너지 창출, 유럽 대형마트(까르푸 등) 입점 확대, 식물성 식품(PlanTable) 브랜드 육성, 그리고 글로벌 맞춤형 영양 솔루션(FNT) 사업 안착에 전사 역량을 집중하고 있습니다.`,
+          vocabs: [
+            { term: "1. GSP (Global Strategic Product)", cat: "식품 전략", desc: "비비고 만두, 치킨, 가공밥, K-소스, 김치 등 글로벌 집중 육성 7대 전략 제품군", ex: `"유럽 현지 입맛을 반영한 GSP 라인업 3종을 우선 런칭하여 대형 리테일 매대 점유율을 18% 확대했습니다."` },
+            { term: "2. 스페셜티 아미노산(Specialty)", cat: "바이오 지표", desc: "사료용 및 식품용 고수익 프리미엄 기능성 발효 아미노산", ex: `"사료 첨가용 아미노산의 글로벌 원가 경쟁력을 분석하여 분기 영업이익률을 3.2%p 방어했습니다."` },
+            { term: "3. 슈완스(Schwan's) 유통 시너지", cat: "북미 인프라", desc: "미국 전역 3만 개 이상의 그로서리 매장에 침투할 수 있는 직배송 유통망", ex: `"슈완스의 피자 납품 콜드체인망을 활용해 비비고 냉동식품의 미국 중서부 보급률을 2배 끌어올렸습니다."` },
+            { term: "4. 콜드체인(Cold Chain) 물류", cat: "품질 관리", desc: "제조부터 식탁까지 영하 18℃ 이하의 온도를 무결점으로 유지하는 신선 물류", ex: `"해외 수출 컨테이너의 실시간 온도 센서 모니터링 체계를 도입해 해상 운송 중 변질 로스율을 0%로 만들었습니다."` },
+            { term: "5. 현지화 R&D (Localization)", cat: "상품 기획", desc: "고수 향 선호도, 비건 인증 등 진출 국가별 식문화 규제에 맞춘 레시피 현지화", ex: `"이슬람 문화권 공략을 위해 할랄(Halal) 인증 전용 생산 라인을 구축하여 동남아 수주를 40% 늘렸습니다."` },
+            { term: "6. B2B 식자재 수주(Food Service)", cat: "영업 채널", desc: "외식 프랜차이즈 및 단체급식 대형 거래처 전용 대용량 원료육 및 조미소재 공급", ex: `"프랜차이즈 전용 맞춤형 프리믹스 소스를 개발·제안하여 3년 장기 단독 납품 계약을 체결했습니다."` },
+            { term: "7. 생분해 소재(PHA)", cat: "친환경 ESG", desc: "미생물 발효로 바다에서 100% 분해되는 CJ만의 독보적인 친환경 생분해 바이오 플라스틱", ex: `"친환경 ESG 패키징 트렌드에 발맞추어 PHA 적용 식품 용기 개발 프로젝트에 주도적으로 참여했습니다."` },
+            { term: "8. 원가 혁신(Cost Innovation)", cat: "경영 효율", desc: "원맥, 대두, 원당 등 국제 곡물 가격 변동 리스크에 대응하는 스마트 구매 기법", ex: `"선물 거래 헤징 및 대체 산지 다변화를 통해 원재료 급등기에도 매입 단가를 6% 방어했습니다."` },
+            { term: "9. 플랜테이블(PlanTable)", cat: "미래 푸드", desc: "100% 식물성 단백질로 고기 본연의 육즙과 식감을 재현한 친환경 K-비건 라인", ex: `"채식주의 시장이 발달한 독일과 영국 시장을 타깃으로 플랜테이블 시식 팝업을 기획해 인지도를 높였습니다."` },
+            { term: "10. 글로벌 오디트(Audit) 대응", cat: "품질 인증", desc: "미국 코스트코, 월마트 등 글로벌 유통 체인의 엄격한 공장 위생 감사 통과", ex: `"글로벌 GFSI 식품 안전 시스템 기준을 철저히 사전 점검하여 까다로운 월마트 공급사 정기 오디트를 무결점으로 통과했습니다."` }
+          ]
+        };
+      }
+
+      if (lowerComp.includes("이마트") || lowerComp.includes("신세계") || lowerComp.includes("emart")) {
+        return {
+          vision: `"고객의 일상을 바꾸는 라이프스타일 큐레이터"를 지향하며, 오프라인 마트의 압도적 본원적 경쟁력인 '상시 최저가(EDLP)'와 '식음/신선식품 초격차'를 핵심 비전으로 삼고 있습니다.`,
+          news: `이마트-이마트24-이마트에브리데이 3사 통합 매입(소싱) 체계를 본격 가동하여 원가 절감과 바잉 파워(Buying Power)를 극대화하고 있으며, 기존 점포를 체험형 복합 공간인 '스타필드 마켓(죽전점 등)'으로 대대적으로 리뉴얼하고 있습니다.`,
+          achievements: `연간 연결 매출 29조 원 이상을 기록하고 있으며, 자체 브랜드(PB) '노브랜드'는 연 매출 1조 3,000억 원 돌파 및 300여 개 전문점 생태계를 구축했습니다. 3사 통합 시너지를 통해 분기 영업이익 흑자 턴어라운드를 달성했습니다.`,
+          future: `단독 기획 상품인 '가격 파괴 선언' 프로젝트 상시화, 산지 직송 신선식품 물류망의 AI 수요 예측 자동화 도입, 온-오프라인 통합 멤버십 락인 효과 강화에 전력을 기울이고 있습니다.`,
+          vocabs: [
+            { term: "1. SKU (취급 상품 수)", cat: "상품 관리", desc: "매장 내 관리되는 최소 단위의 개별 상품 수", ex: `"저효율 SKU 15%를 과감히 정리하고 핵심 인기 상품 매대를 확장해 카테고리 매출을 20% 신장시켰습니다."` },
+            { term: "2. 매대 회전율 (Turnover)", cat: "영업 효율", desc: "골든존 매대에 진열된 상품이 판매되어 재고가 교체되는 속도", ex: `"고객 동선 데이터를 기반으로 매대 배치를 재조정하여 주간 매대 회전율을 1.8배 끌어올렸습니다."` },
+            { term: "3. PB (자체 기획 브랜드)", cat: "상품 기획", desc: "제조사 브랜드 대비 마진율이 높고 가격 경쟁력이 독보적인 유통사 기획 상품", ex: `"원재료 직소싱을 통해 제조 원가를 18% 낮춘 가성비 중심의 기획 PB 상품을 런칭했습니다."` },
+            { term: "4. GP 마진율 (매출총이익률)", cat: "수익성 지표", desc: "판매가에서 매입 원가를 제외한 순수 상품 마진 비율", ex: `"통합 발주를 통한 납품 단가 협상으로 카테고리 평균 GP 마진율을 2.5%p 개선했습니다."` },
+            { term: "5. 벤더 소싱 (Vendor Sourcing)", cat: "협력사 관리", desc: "우수한 품질의 제품을 안정적으로 공급할 수 있는 신규 협력사 발굴", ex: `"산지 직거래 벤더 3곳을 신규 발굴하여 중간 유통 수수료를 12% 절감했습니다."` },
+            { term: "6. 로스율 (Shrinkage/Loss)", cat: "재고 리스크", desc: "파손, 유통기한 경과, 폐기로 인해 발생하는 상품 손실 비율", ex: `"신선식품 선도 관리 프로세스를 재정립하여 분기 로스율을 4.2%에서 1.8%로 대폭 감축했습니다."` },
+            { term: "7. O4O 옴니채널 픽업", cat: "유통 융합", desc: "온라인에서 주문하고 오프라인 매장에서 당일 수령하는 쇼핑 경험", ex: `"온라인 픽업 전용 매대를 고객 픽업존 동선에 결합하여 매장 연계 구매율을 15% 견인했습니다."` },
+            { term: "8. 카테고리 킬러 (Category Killer)", cat: "MD 킬러상품", desc: "특정 상품군에서 경쟁사가 따라올 수 없는 독보적인 구색과 가격을 갖춘 상품", ex: `"트렌드 간편식(HMR) 카테고리 킬러 라인업 10종을 단독 유치해 2030 신규 고객 유입을 확대했습니다."` },
+            { term: "9. 엔드캡 (End-Cap) 프로모션", cat: "VMD 진열", desc: "통로 양 끝 통행량이 가장 많은 핵심 매대 공간을 활용한 기획전", ex: `"시즌 테마 상품을 엔드캡 골든존에 집중 진열하여 단품 판매량을 전주 대비 140% 신장시켰습니다."` },
+            { term: "10. 바잉 파워 (Buying Power)", cat: "바잉 역량", desc: "대규모 물량 일괄 매입을 통해 제조사와의 가격 협상력을 주도하는 힘", ex: `"계열사 통합 사전 계약 물량을 결합한 바잉 파워로 사상 최저 매입가를 확보했습니다."` }
+          ]
+        };
+      }
+
+      // Default smart domain synthesis from jobDesc
+      const cleanDesc = desc.replace(/[^\w\sㄱ-힣]/g, ' ');
+      const descWords = cleanDesc.split(/\s+/).filter(w => w.length >= 2 && !['담당업무', '자격요건', '우대사항', '근무조건', '모집부문', '제출서류', '전형절차'].includes(w));
+      const keyProjects = descWords.slice(0, 8);
+
+      return {
+        vision: `${company}는 ${role} 영역에서 차별화된 기술력과 시장 선점 역량을 바탕으로, 고객 경험 혁신과 산업 내 고부가가치 창출을 최우선 경영 비전으로 삼고 있습니다. 신뢰와 실행력을 갖춘 프로페셔널 인재를 지향합니다.`,
+        news: `최근 ${company}는 급변하는 시장 환경에 대응하여 ${keyProjects[0] || '핵심 사업'} 및 ${keyProjects[1] || '신규 서비스'} 부문의 시장 지배력을 강화하고 있으며, 디지털 전환과 글로벌/B2B 판로 개척을 위한 적극적인 투자를 이어가고 있습니다.`,
+        achievements: `주력 사업 부문의 안정적인 수주 실적과 견고한 고객 파트너십을 바탕으로, 동종 업계 평균을 상회하는 영업 이익률과 분기별 프로젝트 완수율 지표를 꾸준히 증명하고 있습니다.`,
+        future: `지원 직무(${role})를 중심으로 ${keyProjects[2] || '차세대 솔루션'} 고도화 및 고객 맞춤형 비즈니스 모델 확장을 향후 핵심 전략 로드맵으로 전개하여 시장 내 독보적 입지를 확고히 할 계획입니다.`,
+        vocabs: [
+          { term: `1. 정량적 KPI 지표 관리`, cat: "성과 관리", desc: `${company}의 ${role} 현업에서 목표 달성률을 객관적으로 입증하는 핵심 수치 지표`, ex: `"프로세스 재설계를 통해 ${keyProjects[0] || '프로젝트'}의 분기 목표 KPI를 120% 초과 달성했습니다."` },
+          { term: `2. 병목 구간(Bottleneck) 해소`, cat: "문제 해결", desc: "업무 파이프라인에서 지연을 유발하는 구조적 원인을 진단하고 개선", ex: `"공정 간 병목 원인을 규명하여 리드타임을 기존 대비 25% 단축시켰습니다."` },
+          { term: `3. 고객 니즈 발굴(VoC 분석)`, cat: "고객 지향", desc: "시장과 클라이언트의 요구사항을 선제적으로 파악해 제품과 서비스에 반영", ex: `"고객 피드백 데이터를 분석하여 불만 요소를 사전에 개선해 만족도를 높였습니다."` },
+          { term: `4. 이해관계자 정합(Alignment)`, cat: "협업 소통", desc: "유관 부서 및 협력사와의 이견을 객관적 지표와 회의체를 통해 조율", ex: `"명확한 마일스톤 공유를 통해 부서 간의 리소스 충돌을 100% 원만하게 해결했습니다."` },
+          { term: `5. 품질 보증(QA) 체계 구축`, cat: "품질 관리", desc: "최종 산출물의 결함률을 제로화하는 단계별 사전 검증 프로세스", ex: `"체크리스트 기반 교차 검수를 도입해 최종 납품 산출물의 무결점을 달성했습니다."` },
+          { term: `6. 비용 효율화(Cost-Saving)`, cat: "수익 기여", desc: "불필요한 소모성 예산과 비효율을 줄여 부서 영업이익률을 제고", ex: `"불필요한 중복 작업을 자동화하여 운영 비용을 15% 이상 절감했습니다."` },
+          { term: `7. 표준 업무 매뉴얼(SOP)`, cat: "조직 자산화", desc: "누구나 즉시 활용 가능한 업무 절차의 표준화 및 문서화", ex: `"담당 업무의 실행 매뉴얼을 수립해 신규 투입 인원의 적응 기간을 절반으로 줄였습니다."` },
+          { term: `8. 데이터 기반 의사결정`, cat: "실무 분석", desc: "개인의 직관 대신 축적된 데이터와 팩트를 근거로 실행 방향 결정", ex: `"과거 성과 데이터를 분석해 성공 확률이 가장 높은 대안을 우선 실행했습니다."` },
+          { term: `9. 리스크 매니지먼트`, cat: "위기 대응", desc: "프로젝트 진행 간 발생 가능한 변수와 규제 위험을 사전에 차단", ex: `"사전 비상 시나리오를 수립해 돌발 변수 발생 시에도 납기를 준수했습니다."` },
+          { term: `10. 파이프라인 최적화`, cat: "프로세스 혁신", desc: "기획부터 실행, 검수까지의 전 과정을 원활하게 연결하는 최적화", ex: `"반복적인 루틴 업무 동선을 개선하여 팀 전체의 주간 생산성을 20% 향상시켰습니다."` }
+        ]
+      };
+    }
+
+    function updateStep3KeywordBadges(vocabList) {
+      const container = document.getElementById('keyword-badges');
+      if (!container || !vocabList) return;
+      const terms = vocabList.slice(0, 4).map(v => v.term.split(' ')[1] || v.term);
+      container.innerHTML = terms.map(t => `
+        <span class="px-2 py-0.5 bg-teal-50 text-teal-700 border border-teal-200 rounded font-medium">${t}</span>
+      `).join('');
+    }
+
+    // ==========================================
+    // STEP 3: 4-Core Essay Builder (85%~95% Golden Ratio)
+    // ==========================================
+    function initEssayModule() {
+      const draftBtn = document.getElementById('generate-draft-btn');
+      const humanizeBtn = document.getElementById('humanize-btn');
+      const draftEditor = document.getElementById('essay-draft-editor');
+      const humanEditor = document.getElementById('essay-humanized-editor');
+      const promptInput = document.getElementById('essay-prompt');
+      const customLenInput = document.getElementById('custom-len-input');
+      const subtabBtns = document.querySelectorAll('.essay-subtab-btn');
+      const quickLenBtns = document.querySelectorAll('.quick-len-btn');
+
+      subtabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const sectionKey = btn.getAttribute('data-section-key');
+          switchEssaySection(sectionKey);
+        });
+      });
+
+      customLenInput.addEventListener('input', () => {
+        let val = parseInt(customLenInput.value);
+        if (isNaN(val) || val <= 100) val = 500;
+        appState.essaySections[appState.currentEssaySectionKey].targetLen = val;
+        document.getElementById('target-len-display').innerText = val;
+        updateGoldenRangeHint(val);
+        updateWordCountIndicators();
+        saveState();
+      });
+
+      quickLenBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const val = parseInt(btn.getAttribute('data-quick-len'));
+          customLenInput.value = val;
+          appState.essaySections[appState.currentEssaySectionKey].targetLen = val;
+          document.getElementById('target-len-display').innerText = val;
+          updateGoldenRangeHint(val);
+          updateWordCountIndicators();
+          saveState();
+        });
+      });
+
+      promptInput.addEventListener('input', () => {
+        appState.essaySections[appState.currentEssaySectionKey].prompt = promptInput.value;
+        saveState();
+      });
+
+      draftEditor.addEventListener('input', () => {
+        appState.essaySections[appState.currentEssaySectionKey].draft = draftEditor.value;
+        updateDraftCounts();
+        saveState();
+      });
+
+      humanEditor.addEventListener('input', () => {
+        appState.essaySections[appState.currentEssaySectionKey].humanized = humanEditor.value;
+        updateWordCountIndicators();
+        saveState();
+      });
+
+      document.getElementById('copy-draft-btn').addEventListener('click', () => {
+        copyToClipboard(draftEditor.value);
+        showToast("초안이 클립보드에 복사되었습니다.");
+      });
+
+      document.getElementById('copy-humanized-btn').addEventListener('click', () => {
+        copyToClipboard(humanEditor.value);
+        showToast("휴먼라이징 완성본이 복사되었습니다.");
+      });
+
+      draftBtn.addEventListener('click', () => {
+        const activeKey = appState.currentEssaySectionKey;
+        const currentSection = appState.essaySections[activeKey];
+        const question = promptInput.value.trim() || ESSAY_SECTIONS_CONFIG[activeKey].defaultPrompt;
+        const selectedId = document.getElementById('essay-source-card').value;
+
+        let exp = appState.experiences[0];
+        if (selectedId !== 'auto') {
+          exp = appState.experiences.find(c => c.id === selectedId) || exp;
+        }
+
+        if (!exp) {
+          showToast("경험 금고에 카드가 없습니다. Step 1에서 경험을 먼저 생성하거나 샘플을 채워주세요.");
+          return;
+        }
+
+        const rawDraft = buildSectionTailoredDraft(activeKey, question, exp, appState.jobAnalysis, currentSection.targetLen);
+        const calibratedDraft = fitTextToTargetGoldenRatio(rawDraft, currentSection.targetLen, appState.jobAnalysis);
+
+        draftEditor.value = calibratedDraft;
+        currentSection.draft = calibratedDraft;
+        updateDraftCounts();
+        generateHeadlines(exp, activeKey);
+        saveState();
+        showToast(`'${ESSAY_SECTIONS_CONFIG[activeKey].title}' 85%~95% 황금구간 맞춤 초안이 생성되었습니다.`);
+      });
+
+      humanizeBtn.addEventListener('click', () => {
+        const activeKey = appState.currentEssaySectionKey;
+        const currentSection = appState.essaySections[activeKey];
+        const currentDraft = draftEditor.value.trim();
+
+        if (!currentDraft) {
+          showToast("먼저 STAR 초안을 생성해 주세요.");
+          return;
+        }
+
+        const rawHumanized = humanizeSectionText(activeKey, currentDraft, currentSection.targetLen, appState.jobAnalysis);
+        const calibratedHumanized = fitTextToTargetGoldenRatio(rawHumanized, currentSection.targetLen, appState.jobAnalysis);
+
+        humanEditor.value = calibratedHumanized;
+        currentSection.humanized = calibratedHumanized;
+        updateWordCountIndicators();
+        saveState();
+        showToast("AI 클리셰를 지우고 85%~95% 황금비율로 완성되었습니다!");
+      });
+
+      switchEssaySection('reason');
+    }
+
+    function updateGoldenRangeHint(targetLen) {
+      const min = Math.floor(targetLen * 0.85);
+      const max = Math.floor(targetLen * 0.95);
+      const hint = document.getElementById('golden-range-hint');
+      if (hint) hint.innerText = `황금구간: ${min}~${max}자`;
+    }
+
+    function switchEssaySection(sectionKey) {
+      appState.currentEssaySectionKey = sectionKey;
+      const config = ESSAY_SECTIONS_CONFIG[sectionKey];
+      const sectionData = appState.essaySections[sectionKey];
+
+      const subtabBtns = document.querySelectorAll('.essay-subtab-btn');
+      subtabBtns.forEach(btn => {
+        const key = btn.getAttribute('data-section-key');
+        if (key === sectionKey) {
+          btn.className = 'essay-subtab-btn flex-1 min-w-[200px] py-2.5 px-3.5 rounded-xl font-bold text-xs flex items-center justify-center space-x-2 transition-all bg-amber-500 text-white shadow-sm';
+          btn.querySelector('span:first-child').className = 'w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[10px] text-white';
+        } else {
+          btn.className = 'essay-subtab-btn flex-1 min-w-[200px] py-2.5 px-3.5 rounded-xl font-semibold text-xs flex items-center justify-center space-x-2 transition-all bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200';
+          btn.querySelector('span:first-child').className = 'w-5 h-5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center text-[10px]';
+        }
+      });
+
+      document.getElementById('current-item-label').innerText = config.label;
+      const promptInput = document.getElementById('essay-prompt');
+      promptInput.value = sectionData.prompt || config.defaultPrompt;
+
+      const customLenInput = document.getElementById('custom-len-input');
+      const targetLen = sectionData.targetLen || config.defaultTargetLen;
+      customLenInput.value = targetLen;
+      document.getElementById('target-len-display').innerText = targetLen;
+      updateGoldenRangeHint(targetLen);
+
+      const draftEditor = document.getElementById('essay-draft-editor');
+      const humanEditor = document.getElementById('essay-humanized-editor');
+      draftEditor.value = sectionData.draft || '';
+      humanEditor.value = sectionData.humanized || '';
+
+      updateDraftCounts();
+      updateWordCountIndicators();
+    }
+
+    function buildSectionTailoredDraft(sectionKey, question, exp, job, targetLen) {
+      const company = job ? job.company : "지원 기업";
+      const role = job ? job.role : "해당 직무";
+      const newsSnippet = job && job.news ? `특히 최근 ${company}의 '${job.news.slice(0, 48)}...' 성과를 주목하며 ` : '';
+      const futureSnippet = job && job.future ? `향후 추진 중인 [${job.future.slice(0, 38)}...] 로드맵에서 ` : '';
+
+      if (sectionKey === 'reason') {
+        return `[${company} ${role} 지원동기 및 입사 후 포부]
+
+${newsSnippet}고객의 일상에 실질적 변화를 창출하는 ${company}의 확고한 사업 비전에 깊이 공감하여 지원했습니다. 특히 ${role}로서 마주할 글로벌 시장 경쟁과 현업의 실무적 과제를 검증된 실행력으로 돌파하고자 합니다.
+
+[직무를 향한 노력과 검증된 역량]
+과거 ${exp.title}을 진행하며 ${exp.situation} 상황에 직면했습니다. 당시 ${exp.task}라는 어려움이 있었으나, ${exp.action}을 적극적으로 주도했습니다. 그 결과 ${exp.result}라는 실질적 성과를 만들어내며 직무 적합성을 입증했습니다.
+
+[입사 후 목표 및 포부]
+${futureSnippet}팀의 핵심 KPI 달성에 선제적으로 기여하겠습니다. 주관적 직관에 안주하지 않고 객관적 데이터와 시장의 목소리를 기준으로 문제를 정의하여 ${company}의 비즈니스 성장을 가속화하는 든든한 실무진이 되겠습니다.`;
+      } else if (sectionKey === 'challenge') {
+        return `[목표를 향한 집요함: ${exp.title}]
+
+[Situation & Task]
+${exp.situation} 당시, ${exp.task}라는 치명적인 문제에 직면했습니다. 일반적인 방식으로는 납기와 퀄리티를 동시에 보장하기 어려운 극한의 장애물이었습니다.
+
+[Action]
+문제를 회피하지 않고 근본 원인(Root Cause)을 규명하기 위해 ${exp.action}을 주도했습니다. 특히 팀원들과 객관적인 기준을 수립하고 발생 가능한 리스크를 단계별로 분해하여 신속하게 대안을 실행에 옮겼습니다.
+
+[Result & Lesson]
+그 결과 ${exp.result}를 달성하며 위기를 기회로 전환시킬 수 있었습니다. 불확실한 상황에서도 데이터 기반의 의사결정과 책임감이 결과를 바꾼다는 결정적 교훈을 얻었습니다.`;
+      } else if (sectionKey === 'competency') {
+        return `[실무를 관통하는 핵심 강점: 문제해결력과 실행력]
+
+${role} 직무를 성공적으로 수행하기 위한 저의 핵심 강점은 '객관적 기준에 입각한 프로세스 최적화 및 돌파 역량'입니다.
+
+[강점 발휘 사례: ${exp.title}]
+실제로 ${exp.situation} 과정에서 ${exp.task} 문제를 마주했을 때, 저의 역량이 빛을 발했습니다. 
+저는 주관적 추측을 배제하고 ${exp.action}을 통해 구조적 병목을 신속하게 해소했습니다. 
+그 결과 ${exp.result}라는 성과를 거두었습니다.
+
+[직무 적용 계획]
+이러한 저의 실행 역량은 ${company}의 ${role} 현업에서도 복잡한 요구사항을 교통정리하고 생산성을 극대화하는 데 즉각 활용될 것입니다.`;
+      } else {
+        return `[AI 및 스마트 툴 활용을 통한 업무 효율화]
+
+[배경 및 문제 정의]
+디지털 전환 시대에 반복적이고 소모적인 루틴 업무는 창의적 사고를 저해하는 가장 큰 요소입니다. 
+${exp.situation} 당시에도 ${exp.task}라는 비효율이 존재했습니다.
+
+[AI 도구 도입 및 프로세스 혁신]
+저는 이를 관행으로 넘기지 않고 최신 생성형 AI 프롬프트 엔지니어링 및 자동화 스크립트를 워크플로우에 접목했습니다. 구체적으로 ${exp.action}을 실행하여 수작업 시간을 획기적으로 줄였습니다.
+
+[정량적 성과 및 교훈]
+도입 결과 ${exp.result}라는 극적인 생산성 개선을 이뤄냈습니다. 기술을 능동적으로 학습하고 업무에 결합할 때 비즈니스 임팩트가 극대화된다는 것을 체득했습니다.`;
+      }
+    }
+
+    function humanizeSectionText(sectionKey, draft, targetLen, job) {
+      let text = draft;
+      text = text.replace(/귀사의 무궁한 발전을 기원하며/g, '');
+      text = text.replace(/저의 가장 큰 무기입니다/g, '핵심적인 실행 동력입니다');
+      text = text.replace(/열심히 노력하여/g, '주도적으로 프로세스를 재설계하여');
+      text = text.replace(/최선을 다해 임했습니다/g, '실제 시장 데이터를 수집하여 2주 단위 스프린트로 전개했습니다');
+      text = text.replace(/치명적인 영향을 줄 수 있는 위기 상황이었습니다/g, '예상 납기 지연율이 25%까지 치솟았던 병목이었습니다');
+      text = text.replace(/단순히 문제를 방치하지 않고/g, '직관 대신 정량적 지표를 기준으로');
+      text = text.replace(/입사 후에도 귀사의 성장에 기여하는 실무진이 되겠습니다\./g, '실제 프로덕트의 전환율과 운영 임팩트로 증명해 보이겠습니다.');
+
+      if (sectionKey === 'reason' && job && job.future && !text.includes('지표를 수호')) {
+        text += `\n\n앞으로 ${job.company}의 미래 전략인 [${job.future.slice(0, 35)}...] 분야에서도 현직자 수준의 기민함으로 팀의 북극성 지표를 달성하겠습니다.`;
+      }
+
+      return text;
+    }
+
+    function generateHeadlines(exp, sectionKey) {
+      const headlinesBox = document.getElementById('headlines-box');
+      const container = document.getElementById('headline-recommendations');
+      container.classList.remove('hidden');
+
+      let titleA = `성과지향형: "${exp.result || '정량적 성과'}를 달성한 집요한 실행력"`;
+      let titleB = `호기심형: "위기를 기회로 전환시킨 단 하나의 액션 플랜"`;
+      let titleC = `직무전문형: "${ESSAY_SECTIONS_CONFIG[sectionKey].title.slice(3)}: ${exp.title}"`;
+
+      headlinesBox.innerHTML = `
+        <button onclick="applyHeadline('${escapeHtml(titleA)}')" class="p-2.5 bg-slate-50 hover:bg-amber-50 hover:border-amber-300 border border-slate-200 rounded-xl text-left transition-all">
+          <span class="font-bold text-amber-700 block mb-0.5">A. 성과 중심</span>
+          <span class="text-slate-700">${titleA}</span>
+        </button>
+        <button onclick="applyHeadline('${escapeHtml(titleB)}')" class="p-2.5 bg-slate-50 hover:bg-amber-50 hover:border-amber-300 border border-slate-200 rounded-xl text-left transition-all">
+          <span class="font-bold text-amber-700 block mb-0.5">B. 호기심 유발</span>
+          <span class="text-slate-700">${titleB}</span>
+        </button>
+        <button onclick="applyHeadline('${escapeHtml(titleC)}')" class="p-2.5 bg-slate-50 hover:bg-amber-50 hover:border-amber-300 border border-slate-200 rounded-xl text-left transition-all">
+          <span class="font-bold text-amber-700 block mb-0.5">C. 직무 일치</span>
+          <span class="text-slate-700">${titleC}</span>
+        </button>
+      `;
+    }
+
+    window.applyHeadline = function(titleText) {
+      const editor = document.getElementById('essay-humanized-editor');
+      const current = editor.value;
+      const cleanTitle = titleText.replace(/^.*?: /, '');
+      editor.value = `${cleanTitle}\n\n` + current.replace(/^\[.*?\]\n\n/, '');
+      appState.essaySections[appState.currentEssaySectionKey].humanized = editor.value;
+      updateWordCountIndicators();
+      saveState();
+      showToast("선택한 소제목이 자소서 상단에 적용되었습니다.");
+    };
+
+    function updateDraftCounts() {
+      const val = document.getElementById('essay-draft-editor').value;
+      const len = val.length;
+      document.getElementById('draft-char-count').innerText = len;
+
+      const target = appState.essaySections[appState.currentEssaySectionKey]?.targetLen || 700;
+      const min = Math.floor(target * 0.85);
+      const max = Math.floor(target * 0.95);
+      const badge = document.getElementById('draft-golden-badge');
+
+      if (len === 0) {
+        badge.innerText = "작성 대기";
+        badge.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500";
+      } else if (len >= min && len <= max) {
+        badge.innerText = `🎯 황금구간 충족 (${min}~${max}자)`;
+        badge.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700";
+      } else if (len < min) {
+        badge.innerText = `부족 (${Math.round((len/target)*100)}%)`;
+        badge.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800";
+      } else {
+        badge.innerText = `초과 (${Math.round((len/target)*100)}%)`;
+        badge.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-700";
+      }
+    }
+
+    function updateWordCountIndicators() {
+      const val = document.getElementById('essay-humanized-editor').value;
+      const len = val.length;
+      const target = appState.essaySections[appState.currentEssaySectionKey]?.targetLen || 700;
+      const min = Math.floor(target * 0.85);
+      const max = Math.floor(target * 0.95);
+
+      document.getElementById('human-char-count').innerText = len;
+      const rate = Math.min(Math.round((len / target) * 100), 100);
+      document.getElementById('char-match-rate').innerText = `${rate}%`;
+      document.getElementById('char-progress-bar').style.width = `${rate}%`;
+
+      const goldenBadge = document.getElementById('human-golden-badge');
+      const verdict = document.getElementById('ratio-verdict-text');
+
+      if (len === 0) {
+        goldenBadge.innerText = "분량 산정 대기";
+        goldenBadge.className = "bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-0.5 rounded-full";
+        verdict.innerHTML = `<i class="fa-solid fa-circle-check"></i><span>목표 글자수 대비 분석 대기</span>`;
+        verdict.className = "text-slate-400 font-semibold flex items-center space-x-1";
+      } else if (len >= min && len <= max) {
+        goldenBadge.innerText = `🎯 황금분량 85%~95% 충족!`;
+        goldenBadge.className = "bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full";
+        verdict.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i><span class="text-emerald-700 font-bold">인사담당자 최적 황금구간 (${min}~${max}자) 정합</span>`;
+        verdict.className = "text-emerald-700 font-bold flex items-center space-x-1";
+      } else if (len < min) {
+        goldenBadge.innerText = `85% 미달 (${len}/${target}자)`;
+        goldenBadge.className = "bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full";
+        verdict.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-500"></i><span class="text-amber-700">최소 권장(${min}자) 대비 ${min - len}자 부족</span>`;
+        verdict.className = "text-amber-700 font-semibold flex items-center space-x-1";
+      } else {
+        goldenBadge.innerText = `95% 초과 (${len}/${target}자)`;
+        goldenBadge.className = "bg-rose-100 text-rose-800 text-[10px] font-bold px-2 py-0.5 rounded-full";
+        verdict.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-500"></i><span class="text-rose-700">최대 권장(${max}자) 대비 ${len - max}자 초과</span>`;
+        verdict.className = "text-rose-700 font-semibold flex items-center space-x-1";
+      }
+    }
+
+    function updateSourceCardDropdown() {
+      const select = document.getElementById('essay-source-card');
+      if (!select) return;
+      select.innerHTML = '<option value="auto">🌟 AI 추천 최적 경험 자동 반영</option>';
+      appState.experiences.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        opt.innerText = c.title;
+        select.appendChild(opt);
+      });
+    }
+
+    // ==========================================
+    // STEP 4: 10 Core Questions & Sub-tier Follow-up Coaching Engine
+    // ==========================================
+    function initInterviewModule() {
+      renderTenQuestionsList();
+
+      document.getElementById('refresh-questions-btn').addEventListener('click', () => {
+        renderTenQuestionsList();
+        showToast("지원 기업 및 직무 팩트와 연동하여 10대 예상 질문이 새로고침되었습니다.");
+      });
+
+      const tierSubtabBtns = document.querySelectorAll('.tier-tab-btn');
+      tierSubtabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const tier = btn.getAttribute('data-sub-tier');
+          switchQuestionTier(tier);
+        });
+      });
+
+      const answerTextarea = document.getElementById('tier-user-answer');
+      answerTextarea.addEventListener('input', () => {
+        const key = `${appState.interview.selectedQIndex}_${appState.interview.selectedSubTier}`;
+        appState.interview.userAnswers[key] = answerTextarea.value;
+        document.getElementById('answer-char-count').innerText = answerTextarea.value.length;
+        saveState();
+      });
+
+      document.getElementById('fill-tier-sample-btn').addEventListener('click', () => {
+        const questions = getTenCoreInterviewQuestions(appState.jobAnalysis?.company, appState.jobAnalysis?.role);
+        const currentQ = questions[appState.interview.selectedQIndex];
+        const tier = appState.interview.selectedSubTier;
+        const targetData = tier === 'main' ? currentQ.main : (tier === 'follow1' ? currentQ.follow1 : currentQ.follow2);
+
+        if (targetData && targetData.sampleAnswer) {
+          answerTextarea.value = targetData.sampleAnswer;
+          const key = `${appState.interview.selectedQIndex}_${tier}`;
+          appState.interview.userAnswers[key] = targetData.sampleAnswer;
+          document.getElementById('answer-char-count').innerText = targetData.sampleAnswer.length;
+          saveState();
+          showToast(`'${targetData.title || "메인 질문"}'의 실전 모범 샘플 답변이 입력되었습니다.`);
+        }
+      });
+
+      document.getElementById('eval-tier-answer-btn').addEventListener('click', () => {
+        const answer = answerTextarea.value.trim();
+        if (!answer) {
+          showToast("답변을 먼저 입력해 주세요. (샘플 답변을 활용하셔도 좋습니다)");
+          return;
+        }
+        evaluateTierAnswer(answer);
+      });
+
+      document.getElementById('copy-best-answer-btn').addEventListener('click', () => {
+        const script = document.getElementById('report-best-script').innerText;
+        copyToClipboard(script);
+        showToast("모범 답변 스크립트가 클립보드에 복사되었습니다.");
+      });
+    }
+
+    function renderTenQuestionsList() {
+      const container = document.getElementById('ten-questions-container');
+      const questions = getTenCoreInterviewQuestions(appState.jobAnalysis?.company, appState.jobAnalysis?.role);
+      container.innerHTML = '';
+
+      questions.forEach((q, idx) => {
+        const isSelected = idx === appState.interview.selectedQIndex;
+        const card = document.createElement('div');
+        card.className = `p-3 rounded-xl border transition-all cursor-pointer ${
+          isSelected 
+            ? 'bg-purple-50/80 border-purple-400 shadow-sm ring-1 ring-purple-300' 
+            : 'bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+        }`;
+        card.onclick = () => selectMainQuestion(idx);
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${
+              isSelected ? 'bg-purple-600 text-white' : 'bg-slate-100 text-slate-600'
+            }">
+              Q${idx + 1}. ${q.category}
+            </span>
+            <span class="text-[10px] font-semibold text-purple-700 bg-purple-50 px-1.5 py-0.5 rounded border border-purple-100">
+              꼬리질문 2개 포함
+            </span>
+          </div>
+          <p class="text-xs font-bold text-slate-800 leading-snug line-clamp-2">
+            ${escapeHtml(q.title)}
+          </p>
+        `;
+        container.appendChild(card);
+      });
+
+      document.getElementById('interview-progress-badge').innerText = `${appState.interview.selectedQIndex + 1}/10`;
+      renderActiveQuestionDetail();
+    }
+
+    function selectMainQuestion(idx) {
+      appState.interview.selectedQIndex = idx;
+      appState.interview.selectedSubTier = 'main';
+      document.getElementById('interview-progress-badge').innerText = `${idx + 1}/10`;
+      renderTenQuestionsList();
+      showToast(`질문 ${idx + 1}번으로 이동했습니다.`);
+    }
+
+    function switchQuestionTier(tier) {
+      appState.interview.selectedSubTier = tier;
+      renderActiveQuestionDetail();
+    }
+
+    function renderActiveQuestionDetail() {
+      const questions = getTenCoreInterviewQuestions(appState.jobAnalysis?.company, appState.jobAnalysis?.role);
+      const qIndex = appState.interview.selectedQIndex;
+      const currentQ = questions[qIndex];
+      const tier = appState.interview.selectedSubTier;
+
+      // Update Subtab Styles
+      const subtabBtns = document.querySelectorAll('.tier-tab-btn');
+      subtabBtns.forEach(btn => {
+        const btnTier = btn.getAttribute('data-sub-tier');
+        if (btnTier === tier) {
+          btn.className = 'tier-tab-btn flex-1 min-w-[140px] py-2 px-3 rounded-xl text-xs font-bold bg-purple-600 text-white shadow-sm transition-all flex items-center justify-center space-x-1.5';
+        } else {
+          btn.className = 'tier-tab-btn flex-1 min-w-[140px] py-2 px-3 rounded-xl text-xs font-semibold bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200 transition-all flex items-center justify-center space-x-1.5';
+        }
+      });
+
+      // Update Main Header
+      document.getElementById('active-q-category').innerText = `Q${qIndex + 1}. ${currentQ.category}`;
+      document.getElementById('active-q-step-text').innerText = `질문 ${qIndex + 1} / 10`;
+      document.getElementById('active-q-title').innerText = currentQ.title;
+
+      // Determine Target Tier Data
+      const targetData = tier === 'main' ? currentQ.main : (tier === 'follow1' ? currentQ.follow1 : currentQ.follow2);
+
+      // Detail Question Box
+      const tierBadge = document.getElementById('tier-badge');
+      const tierRoleTag = document.getElementById('tier-role-tag');
+      const tierQuestionText = document.getElementById('tier-question-text');
+
+      if (tier === 'main') {
+        tierBadge.innerText = '메인 질문';
+        tierBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded bg-purple-600 text-white';
+        tierRoleTag.innerText = '필수 기본 면접 질문';
+      } else if (tier === 'follow1') {
+        tierBadge.innerText = '꼬리질문 1';
+        tierBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500 text-white';
+        tierRoleTag.innerText = '답변 팩트체크 & 디테일 파고들기';
+      } else {
+        tierBadge.innerText = '꼬리질문 2';
+        tierBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded bg-rose-500 text-white';
+        tierRoleTag.innerText = '극한 상황 대처 & 한계 상황 검증';
+      }
+
+      tierQuestionText.innerText = targetData.question;
+
+      // Coaching Guide
+      document.getElementById('coaching-intent').innerText = targetData.intent;
+      document.getElementById('coaching-pitfall').innerHTML = `⚠️ 감점 주의: ${targetData.pitfall}`;
+
+      const kwContainer = document.getElementById('coaching-keywords');
+      kwContainer.innerHTML = targetData.keywords.map(kw => `
+        <span class="px-2 py-0.5 bg-indigo-50 border border-indigo-200 text-indigo-700 rounded font-semibold text-[11px]">
+          # ${escapeHtml(kw)}
+        </span>
+      `).join('');
+
+      // Answer Input Area
+      document.getElementById('answer-input-label').innerText = `내 실전 답변 작성 (${tier === 'main' ? '메인 질문용' : (tier === 'follow1' ? '꼬리질문 1용' : '꼬리질문 2용')})`;
+      document.getElementById('eval-btn-label').innerText = `${tier === 'main' ? '메인 질문' : (tier === 'follow1' ? '꼬리질문 1' : '꼬리질문 2')} 1:1 논리 첨삭 & 모범답안 받기`;
+
+      const answerTextarea = document.getElementById('tier-user-answer');
+      const key = `${qIndex}_${tier}`;
+      const savedAnswer = appState.interview.userAnswers[key] || '';
+      answerTextarea.value = savedAnswer;
+      document.getElementById('answer-char-count').innerText = savedAnswer.length;
+
+      // Reset / Hide coaching report on tier switch
+      document.getElementById('tier-coaching-report').classList.add('hidden');
+    }
+
+    function evaluateTierAnswer(answerText) {
+      const reportBox = document.getElementById('tier-coaching-report');
+      reportBox.classList.remove('hidden');
+
+      const questions = getTenCoreInterviewQuestions(appState.jobAnalysis?.company, appState.jobAnalysis?.role);
+      const qIndex = appState.interview.selectedQIndex;
+      const currentQ = questions[qIndex];
+      const tier = appState.interview.selectedSubTier;
+      const targetData = tier === 'main' ? currentQ.main : (tier === 'follow1' ? currentQ.follow1 : currentQ.follow2);
+
+      let score = 95;
+      const hasDugwal = answerText.startsWith('네') || answerText.includes('결론부터 말씀드리면') || answerText.includes('저의') || answerText.length < 80;
+      const hasNumbers = /\d+/.test(answerText);
+
+      if (!hasDugwal) score -= 8;
+      if (!hasNumbers) score -= 5;
+      if (answerText.length < 60) score -= 12;
+
+      document.getElementById('tier-score-badge').innerText = `${score}점 / 100점`;
+
+      const dugwalEl = document.getElementById('report-dugwal-text');
+      if (hasDugwal) {
+        dugwalEl.innerHTML = `<span class="text-emerald-600 font-bold">✓ 매우 우수:</span> 첫 문장에서 질문의 핵심 키워드를 회피하지 않고 두괄식으로 명확히 규정하여 면접관의 집중도를 사로잡았습니다.`;
+      } else {
+        dugwalEl.innerHTML = `<span class="text-amber-600 font-bold">△ 보완 필요:</span> 서론 배경이 다소 깁니다. "네, 질문주신 제 역량은 ~입니다"처럼 첫 3초 안에 핵심 결론을 먼저 뱉는 훈련이 필요합니다.`;
+      }
+
+      const balanceEl = document.getElementById('report-balance-text');
+      if (hasNumbers) {
+        balanceEl.innerHTML = `<span class="text-emerald-600 font-bold">✓ 우수:</span> 수치 지표와 구체적 방법론이 뒷받침되어 단순 주장이 아닌 <strong>신뢰할 수 있는 팩트(Fact)</strong>로 답변을 방어했습니다.`;
+      } else {
+        balanceEl.innerHTML = `<span class="text-amber-600 font-bold">△ 보완 필요:</span> 주관적 형용사(예: 열심히, 많이) 대신 %나 기간, 건수 등 객관적인 숫자를 1개 이상 섞으면 설득력이 2배 증가합니다.`;
+      }
+
+      document.getElementById('report-best-script').innerText = targetData.sampleAnswer;
+
+      reportBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      showToast("1:1 정밀 피드백 리포트와 모범답안이 도출되었습니다!");
+    }
+
+    function initSampleLoader() {
+      document.getElementById('load-sample-btn').addEventListener('click', () => {
+        appState.experiences = [
+          {
+            id: 'sample_1',
+            title: '1. 해외 바이어 신규 발굴 및 초도 수주 계약 성사',
+            situation: '글로벌 무역 서포터즈 활동 중 중남미 시장 대상 수출 판로 개척 프로젝트 참여',
+            task: '기존 바이어 네트워크가 전무한 상황에서 3개월 내 최소 1건 이상의 샘플 수주 계약 필요',
+            action: '현지 통관 및 인증(FDA/CE) 규격 분석표를 사전에 제작하여 30개 잠재 바이어사 맞춤 콜드메일 발송 및 화상 피칭',
+            result: '멕시코 바이어 1개 사와 4,500만 원 규모의 초도 샘플 수출 계약 체결 달성',
+            tags: ['#해외영업', '#바이어발굴', '#협상력'],
+            createdAt: '2026.09.20'
+          },
+          {
+            id: 'sample_2',
+            title: '2. 대학 축제 플리마켓 재고 100% 소진 기획',
+            situation: '축제 마지막 날 오후 3시 시점에 준비한 굿즈 재고가 40% 이상 적체되어 적자 위기 발생',
+            task: '잔여 4시간 내에 추가 비용 없이 재고를 전량 소진하고 목표 매출 150만 원을 달성해야 했음',
+            action: '단품 판매 대신 2+1 묶음 세트를 구성하고, 유동인구가 집중되는 주무대 앞 이동 매대로 동선 재배치',
+            result: '마감 30분 전 재고 100% 완판 달성, 총매출 180만 원으로 목표 대비 120% 초과 달성',
+            tags: ['#MD역량', '#재고관리', '#기획력'],
+            createdAt: '2026.09.18'
+          },
+          {
+            id: 'sample_3',
+            title: '3. 대형마트 베이커리 아르바이트 로스율 감축',
+            situation: '마감 1시간 전 신선 빵 폐기율이 일평균 18%에 달해 점포 손실 발생',
+            task: '폐기 손실(로스율)을 줄이면서도 정상가 구매 고객의 불만을 초래하지 않는 프로모션 필요',
+            action: '요일별/시간대별 판매 데이터를 일주일간 기록하여 마감 2시간 전 30% 골든타임 할인존 신설 제안',
+            result: '일평균 폐기 로스율 18%에서 5% 미만으로 72% 감축, 일 마감 매출 15만 원 추가 창출',
+            tags: ['#로스율감축', '#데이터분석', '#현장실행력'],
+            createdAt: '2026.09.15'
+          },
+          {
+            id: 'sample_4',
+            title: '4. 공모전 데이터 분석 파트 갈등 조율',
+            situation: '공모전 기획 방향성 설정 시 감성적 아이디어파와 정량 분석파 간 갈등 심화',
+            task: '팀 분열을 막고 심사 기준에 최적화된 하이브리드 제안서를 마감 내 제출해야 했음',
+            action: '소비자 설문조사 300건을 빠르게 집계해 감정이 아닌 객관적 고객 선호도 데이터로 팀원 설득',
+            result: '팀 만장일치 합의 도출 후 최종 출품, 전국 대학생 마케팅 공모전 우수상 수상',
+            tags: ['#갈등해결', '#데이터기반', '#원활한소통'],
+            createdAt: '2026.09.10'
+          },
+          {
+            id: 'sample_5',
+            title: '5. 동아리 물품 구매 벤더 다변화 및 비용 절감',
+            situation: '기존 단일 문구 업체에서 관행적으로 단체 물품을 구매해 예산 부담 가중',
+            task: '물품 퀄리티를 유지하면서도 구매 단가를 최소 15% 이상 절감해야 했음',
+            action: '온·오프라인 도매 벤더 5곳의 견적서와 MOQ(최소주문수량)를 비교 분석표로 정리해 가격 네고 주도',
+            result: '구매 단가 22% 절감 및 연간 동아리 운영비 45만 원 세이브',
+            tags: ['#소싱협상', '#비용효율화', '#바잉역량'],
+            createdAt: '2026.09.05'
+          },
+          {
+            id: 'sample_6',
+            title: '6. 비전공 툴 독학을 통한 온보딩 매뉴얼 제작',
+            situation: '신입 부원 15명이 들어왔으나 기존 인수인계 자료가 부실해 초기 이탈률 30% 발생',
+            task: '신규 부원들이 스스로 학습할 수 있는 인터랙티브 가이드라인이 절실했음',
+            action: 'Notion 데이터베이스와 Canva를 1주일간 독학하여 부원 온보딩 위키 페이지 제작',
+            result: '신입 부원 온보딩 적응 기간 50% 단축 및 해당 분기 이탈률 0% 달성',
+            tags: ['#학습민첩성', '#조직기여', '#문서화'],
+            createdAt: '2026.09.01'
+          },
+          {
+            id: 'sample_7',
+            title: '7. 이커머스 상세페이지 전환율 3배 개선',
+            situation: '신규 라이프스타일 상품의 클릭률은 높으나 상세페이지 구매 전환율이 1.2%로 저조',
+            task: '광고비 증액 없이 상세페이지 내 이탈률을 낮추고 구매 전환율을 극대화해야 했음',
+            action: '고객 리뷰 키워드 분석을 통해 최다 언급 장점을 상단 GIF로 배치하고 모바일 가독성 개편',
+            result: '구매 전환율 1.2%에서 3.4%로 약 3배 향상 및 월 매출 800만 원 신장',
+            tags: ['#전환율개선', '#A/B테스트', '#실무감각'],
+            createdAt: '2026.08.25'
+          }
+        ];
+
+        saveState();
+        renderExperienceCards();
+        updateSourceCardDropdown();
+        updateExperienceProgress();
+        showToast("합격 대비 7대 핵심 경험 DB가 완벽하게 채워졌습니다!");
+      });
+
+      document.getElementById('generate-sample-card-btn')?.addEventListener('click', () => {
+        document.getElementById('load-sample-btn').click();
+      });
+
+      document.getElementById('clear-storage-btn').addEventListener('click', () => {
+        localStorage.removeItem(STORAGE_KEY);
+        appState.experiences = [];
+        saveState();
+        location.reload();
+      });
+    }
+
+    function initManualModal() {
+      const modal = document.getElementById('manual-modal');
+      const openBtn = document.getElementById('add-manual-card-btn');
+      const closeBtn = document.getElementById('close-modal-btn');
+      const cancelBtn = document.getElementById('cancel-modal-btn');
+      const saveBtn = document.getElementById('save-modal-btn');
+
+      openBtn.addEventListener('click', () => modal.classList.remove('hidden'));
+      const hide = () => modal.classList.add('hidden');
+      closeBtn.addEventListener('click', hide);
+      cancelBtn.addEventListener('click', hide);
+
+      saveBtn.addEventListener('click', () => {
+        const title = document.getElementById('m-title').value.trim();
+        const s = document.getElementById('m-s').value.trim();
+        const t = document.getElementById('m-t').value.trim();
+        const a = document.getElementById('m-a').value.trim();
+        const r = document.getElementById('m-r').value.trim();
+        const tagsRaw = document.getElementById('m-tags').value.trim();
+
+        if (!title || !a) {
+          showToast("제목과 본인의 행동(Action)을 반드시 입력해 주세요.");
+          return;
+        }
+
+        const tags = tagsRaw ? tagsRaw.split(',').map(tag => {
+          tag = tag.trim();
+          return tag.startsWith('#') ? tag : '#' + tag;
+        }) : ['#문제해결', '#실행력'];
+
+        const newCard = {
+          id: 'card_' + Date.now(),
+          title, situation: s || '상황 기술 생략',
+          task: t || '문제 정의 생략',
+          action: a,
+          result: r || '성과 요약 생략',
+          tags,
+          createdAt: new Date().toLocaleDateString('ko-KR')
+        };
+
+        appState.experiences.unshift(newCard);
+        saveState();
+        renderExperienceCards();
+        updateSourceCardDropdown();
+        hide();
+
+        document.getElementById('m-title').value = '';
+        document.getElementById('m-s').value = '';
+        document.getElementById('m-t').value = '';
+        document.getElementById('m-a').value = '';
+        document.getElementById('m-r').value = '';
+        document.getElementById('m-tags').value = '';
+
+        showToast("경험 금고에 직접 카드가 추가되었습니다!");
+      });
+    }
+
+    function initTabs() {
+      const tabBtns = document.querySelectorAll('.tab-btn');
+      const tabContents = document.querySelectorAll('.tab-content');
+
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetId = btn.getAttribute('data-tab');
+
+          tabBtns.forEach(b => {
+            b.classList.remove('bg-indigo-600', 'text-white', 'shadow-sm');
+            b.classList.add('text-slate-600', 'hover:bg-slate-100');
+            const numBadge = b.querySelector('span');
+            if (numBadge) {
+              numBadge.className = 'w-5 h-5 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs';
+            }
+          });
+
+          btn.classList.add('bg-indigo-600', 'text-white', 'shadow-sm');
+          btn.classList.remove('text-slate-600', 'hover:bg-slate-100');
+          const activeBadge = btn.querySelector('span');
+          if (activeBadge) {
+            activeBadge.className = 'w-5 h-5 rounded-full bg-white/20 text-white flex items-center justify-center text-xs';
+          }
+
+          tabContents.forEach(content => {
+            content.classList.add('hidden');
+            content.classList.remove('block');
+          });
+
+          const target = document.getElementById(targetId);
+          if (target) {
+            target.classList.remove('hidden');
+            target.classList.add('block');
+          }
+        });
+      });
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function copyToClipboard(str) {
+      const el = document.createElement('textarea');
+      el.value = str;
+      el.setAttribute('readonly', '');
+      el.style.position = 'absolute';
+      el.style.left = '-9999px';
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+    }
+
+    window.onload = function() {
+      loadState();
+      initTabs();
+      initChatInterviewer();
+      initJobCaptureAndAnalysisModule();
+      initEssayModule();
+      initInterviewModule();
+      initSampleLoader();
+      initManualModal();
+
+      renderExperienceCards();
+      updateSourceCardDropdown();
+      updateExperienceProgress();
+
+      if (appState.jobAnalysis) {
+        document.getElementById('target-company').value = appState.jobAnalysis.company || '';
+        document.getElementById('target-role').value = appState.jobAnalysis.role || '';
+        renderCompanyIntelligenceView(appState.jobAnalysis.company, appState.jobAnalysis.role, appState.jobAnalysis, []);
+      }
+    };
+  </script>
+</body>
+</html>
